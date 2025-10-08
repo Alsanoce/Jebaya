@@ -1,472 +1,103 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>تعبئة رصيد العداد الكهربائي</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        :root{
+            --primary:#0066cc; --primary-dark:#004d99; --secondary:#ff6b00;
+            --light:#f8f9fa; --dark:#333; --gray:#6c757d; --success:#28a745; --danger:#dc3545;
         }
-        
-        :root {
-            --primary: #0066cc;
-            --primary-dark: #004d99;
-            --secondary: #ff6b00;
-            --light: #f8f9fa;
-            --dark: #333;
-            --gray: #6c757d;
-            --success: #28a745;
-            --danger: #dc3545;
-            --adfa3ly: #00a2ff;
-            --mobicash: #6e3cba;
+        body{
+            background: linear-gradient(135deg,#e6f2ff 0%,#cce5ff 100%);
+            color:#333; line-height:1.6; min-height:100vh; padding:20px;
+            display:flex; flex-direction:column; align-items:center; justify-content:center;
         }
-        
-        body {
-            background: linear-gradient(135deg, #e6f2ff 0%, #cce5ff 100%);
-            color: #333;
-            line-height: 1.6;
-            min-height: 100vh;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+        .app-container{
+            width:100%; max-width:400px; background:white; border-radius:20px;
+            box-shadow:0 10px 30px rgba(0,0,0,0.15); overflow:hidden; margin:20px 0;
         }
-        
-        .app-container {
-            width: 100%;
-            max-width: 400px;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            overflow: hidden;
-            margin: 20px 0;
+        header{
+            background: linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 100%);
+            color:white; padding:25px 20px; text-align:center; position:relative;
         }
-        
-        header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            padding: 25px 20px;
-            text-align: center;
-            position: relative;
-        }
-        
-        .logo-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        
-        .logo {
-            width: 70px;
-            height: 70px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-left: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .logo i {
-            font-size: 35px;
-            color: var(--primary);
-        }
-        
-        h1 {
-            font-size: 22px;
-            margin: 10px 0 5px;
-        }
-        
-        .subtitle {
-            font-size: 14px;
-            opacity: 0.9;
-        }
-        
-        .main-menu {
-            padding: 20px;
-        }
-        
-        .form-container {
-            padding: 20px;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-            position: relative;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--primary-dark);
-        }
-        
-        input, select, button {
-            width: 100%;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            font-size: 16px;
-        }
-        
-        input:focus, select:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
-        }
-        
-        .meter-input-container {
-            position: relative;
-        }
-        
-        .meter-input-group {
-            display: flex;
-            gap: 5px;
-            margin-bottom: 10px;
-        }
-        
-        .meter-input-part {
-            flex: 1;
-            text-align: center;
-            padding: 12px 5px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            background: #f8f9fa;
-        }
-        
-        .meter-input-part.highlight {
-            background: #e6f2ff;
-            border-color: var(--primary);
-        }
-        
-        .input-hint {
-            font-size: 12px;
-            color: var(--gray);
-            margin-top: 5px;
-            text-align: center;
-        }
-        
-        .validation-icon {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 18px;
-        }
-        
-        .validation-icon.valid {
-            color: var(--success);
-        }
-        
-        .validation-icon.invalid {
-            color: var(--danger);
-        }
-        
-        .error-message {
-            color: var(--danger);
-            font-size: 12px;
-            margin-top: 5px;
-            display: none;
-        }
-        
-        .payment-options {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin: 20px 0;
-        }
-        
-        .payment-option {
-            background: var(--light);
-            border: 2px solid #ddd;
-            border-radius: 15px;
-            padding: 15px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .payment-option.active {
-            border-color: var(--primary);
-            background: #e6f2ff;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transform: translateY(-5px);
-        }
-        
-        .payment-icon {
-            width: 80px;
-            height: 80px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 10px;
-            overflow: hidden;
-            background: white;
-            padding: 5px;
-        }
-        
-        .payment-icon img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-        
-        .payment-option h3 {
-            font-size: 16px;
-            margin-bottom: 5px;
-        }
-        
-        .payment-option p {
-            font-size: 12px;
-            color: var(--gray);
-        }
-        
-        .btn {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            border: none;
-            padding: 16px;
-            font-size: 18px;
-            font-weight: 600;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 10px;
-        }
-        
-        .btn i {
-            margin-left: 8px;
-        }
-        
-        .btn:hover {
-            background: linear-gradient(135deg, var(--primary-dark) 0%, #003366 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-        
-        .btn-secondary {
-            background: white;
-            color: var(--primary);
-            border: 2px solid var(--primary);
-        }
-        
-        .btn-secondary:hover {
-            background: #e6f2ff;
-        }
-        
-        .success-message {
-            display: none;
-            background: #d4edda;
-            color: #155724;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 20px;
-            text-align: center;
-        }
-        
-        .back-button {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.2);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-        }
-        
-        .hidden {
-            display: none;
-        }
-        
-        footer {
-            text-align: center;
-            padding: 20px;
-            color: var(--gray);
-            font-size: 14px;
-            margin-top: auto;
-        }
-        
-        .amount-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        
-        .amount-btn {
-            padding: 12px;
-            background: var(--light);
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .amount-btn.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-        
-        .fee-notice {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            border-radius: 8px;
-            padding: 12px;
-            margin: 15px 0;
-            font-size: 13px;
-            text-align: center;
-            color: #856404;
-        }
-        
-        .fee-notice i {
-            margin-left: 5px;
-        }
-        
-        .amount-details {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 12px;
-            margin-top: 10px;
-            font-size: 14px;
-        }
-        
-        .amount-breakdown {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
-        }
-        
-        .final-amount {
-            font-weight: bold;
-            color: var(--primary);
-            border-top: 1px solid #ddd;
-            padding-top: 8px;
-            margin-top: 8px;
-        }
-        
-        .instructions {
-            background: #e6f2ff;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            border-right: 4px solid var(--primary);
-        }
-        
-        .instructions h3 {
-            color: var(--primary);
-            margin-bottom: 10px;
-        }
-        
-        .instructions ol {
-            padding-right: 20px;
-        }
-        
-        .instructions li {
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            margin: 10px 0;
-        }
-
-        .loading-spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid var(--primary);
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 10px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        @media (max-width: 480px) {
-            .app-container {
-                border-radius: 15px;
-            }
-            
-            header {
-                padding: 20px 15px;
-            }
-            
-            h1 {
-                font-size: 20px;
-            }
-            
-            .form-container {
-                padding: 15px;
-            }
-            
-            .payment-icon {
-                width: 70px;
-                height: 70px;
-            }
+        .logo-container{ display:flex; justify-content:center; align-items:center; margin-bottom:15px; }
+        .logo{ width:70px; height:70px; background:white; border-radius:50%; display:flex; justify-content:center; align-items:center; margin-left:15px; box-shadow:0 5px 15px rgba(0,0,0,0.2); }
+        .logo i{ font-size:35px; color:var(--primary); }
+        h1{ font-size:22px; margin:10px 0 5px; }
+        .subtitle{ font-size:14px; opacity:0.9; }
+        .main-menu{ padding:20px; }
+        .form-container{ padding:20px; }
+        .form-group{ margin-bottom:20px; position:relative; }
+        label{ display:block; margin-bottom:8px; font-weight:600; color:var(--primary-dark); }
+        input, select, button { width:100%; padding:15px; border:1px solid #ddd; border-radius:10px; font-size:16px; }
+        input:focus, select:focus { outline:none; border-color:var(--primary); box-shadow:0 0 0 2px rgba(0,102,204,0.2); }
+        .meter-input-container{ position:relative; }
+        .validation-icon{ position:absolute; left:15px; top:50%; transform:translateY(-50%); font-size:18px; }
+        .validation-icon.valid{ color:var(--success); }
+        .validation-icon.invalid{ color:var(--danger); }
+        .error-message{ color:var(--danger); font-size:12px; margin-top:5px; display:none; }
+        .payment-options{ display:grid; grid-template-columns:1fr 1fr; gap:15px; margin:20px 0; }
+        .payment-option{ background:var(--light); border:2px solid #ddd; border-radius:15px; padding:15px; text-align:center; cursor:pointer; transition:all 0.3s; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+        .payment-option.active{ border-color:var(--primary); background:#e6f2ff; box-shadow:0 5px 15px rgba(0,0,0,0.1); transform:translateY(-5px); }
+        .payment-icon{ width:80px; height:80px; border-radius:12px; display:flex; align-items:center; justify-content:center; margin-bottom:10px; overflow:hidden; background:white; padding:5px; }
+        .payment-icon img{ width:100%; height:100%; object-fit:contain; }
+        .payment-option h3{ font-size:16px; margin-bottom:5px; }
+        .payment-option p{ font-size:12px; color:var(--gray); }
+        .btn{ background: linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 100%); color:white; border:none; padding:16px; font-size:18px; font-weight:600; border-radius:10px; cursor:pointer; transition:all 0.3s; display:flex; justify-content:center; align-items:center; margin-top:10px; }
+        .btn i{ margin-left:8px; }
+        .btn:hover{ background: linear-gradient(135deg,var(--primary-dark) 0%,#003366 100%); transform:translateY(-2px); box-shadow:0 5px 15px rgba(0,0,0,0.2); }
+        .btn:disabled{ background:#ccc; cursor:not-allowed; transform:none; box-shadow:none; }
+        .back-button{ position:absolute; top:20px; right:20px; background:rgba(255,255,255,0.2); width:40px; height:40px; border-radius:50%; display:flex; justify-content:center; align-items:center; cursor:pointer; }
+        .hidden{ display:none; }
+        footer{ text-align:center; padding:15px; color:var(--gray); font-size:14px; margin-top:auto; display:flex; flex-direction:column; align-items:center; gap:6px; }
+        .amount-notice{ background:#e6f2ff; border:1px solid var(--primary); border-radius:8px; padding:10px; margin:10px 0; font-size:13px; text-align:center; color:var(--primary-dark); }
+        .fee-notice{ background:#fff3cd; border:1px solid #ffeaa7; border-radius:8px; padding:12px; margin:15px 0; font-size:13px; text-align:center; color:#856404; }
+        .amount-details{ background:#f8f9fa; border-radius:8px; padding:12px; margin-top:10px; font-size:14px; }
+        .amount-breakdown{ display:flex; justify-content:space-between; margin-bottom:5px; }
+        .final-amount{ font-weight:bold; color:var(--primary); border-top:1px solid #ddd; padding-top:8px; margin-top:8px; }
+        .instructions{ background:#e6f2ff; padding:15px; border-radius:10px; margin-bottom:20px; border-right:4px solid var(--primary); }
+        .instructions h3{ color:var(--primary); margin-bottom:10px; }
+        .instructions ol{ padding-right:20px; }
+        .instructions li{ margin-bottom:8px; font-size:14px; }
+        .transaction-status{ padding:15px; border-radius:10px; margin:15px 0; text-align:center; display:none; }
+        .status-success{ background:#d4edda; border:1px solid #28a745; color:#155724; }
+        .status-error{ background:#f8d7da; border:1px solid #dc3545; color:#721c24; }
+        .status-processing{ background:#e6f2ff; border:1px solid #0066cc; color:#004085; }
+        .confirmation-step{ display:none; padding:20px; text-align:center; }
+        .confirmation-input{ font-size:24px; text-align:center; letter-spacing:10px; font-weight:bold; }
+        .review-box{ background:#f1f7ff; border:1px solid #d7eaff; border-radius:8px; padding:12px; margin-top:10px; font-size:14px; }
+        .support-line{ font-size:14px; color:var(--gray); }
+        @media (max-width:480px){
+            .app-container{ border-radius:15px; }
+            header{ padding:20px 15px; }
+            h1{ font-size:20px; }
+            .form-container{ padding:15px; }
+            .payment-icon{ width:70px; height:70px; }
+            input, button{ font-size:15px; padding:12px; }
+            .btn{ font-size:16px; padding:12px; }
+            .payment-option{ padding:10px; }
         }
     </style>
 </head>
 <body>
-    <!-- iframe مخفي لاستقبال ردود Google Script -->
-    <iframe name="hiddenFrame" id="hiddenFrame" style="display: none;"></iframe>
-    
     <div class="app-container">
         <header>
-            <div class="back-button hidden" id="backButton">
+            <div class="back-button hidden" id="backButton" title="عودة">
                 <i class="fas fa-arrow-right"></i>
             </div>
             <div class="logo-container">
-                <div class="logo">
-                    <i class="fas fa-bolt"></i>
-                </div>
+                <div class="logo"><i class="fas fa-bolt"></i></div>
                 <div>
                     <h1>شحن الرصيد الكهربائي</h1>
                     <p class="subtitle">اختر طريقة الدفع المناسبة</p>
                 </div>
             </div>
         </header>
-        
-        <!-- القائمة الرئيسية -->
+
         <div class="main-menu" id="mainMenu">
             <div class="instructions">
                 <h3>تعليمات الاستخدام:</h3>
@@ -474,548 +105,693 @@
                     <li>أدخل رقم العداد الخاص بك (13 رقماً)</li>
                     <li>اختر طريقة الدفع المناسبة</li>
                     <li>املأ بيانات الدفع</li>
-                    <li>سيتم إرسال طلبك عبر واتساب تلقائياً</li>
+                    <li>سيتم إرسال طلبك عبر واتساب تلقائياً عند النجاح</li>
                 </ol>
             </div>
-            
+
             <div class="form-group">
                 <label for="meterNumber">رقم العداد</label>
                 <div class="meter-input-container">
-                    <input type="text" id="meterNumber" placeholder="أدخل 13 رقماً بدون مسافات" 
-                           maxlength="13" inputmode="numeric" pattern="[0-9]{13}" required>
+                    <input type="text" id="meterNumber" placeholder="أدخل 13 رقماً بدون مسافات" maxlength="13" inputmode="numeric" pattern="[0-9]{13}" required>
                     <div class="validation-icon hidden" id="meterValidationIcon"></div>
                 </div>
-                <div class="error-message" id="meterError">
-                    ❌ رقم العداد يجب أن يكون 13 رقماً ويبدأ بـ 02680
-                </div>
-                <div class="input-hint">
-                    رقم العداد مكون من 13 رقماً ويبدأ عادة بـ 02680
-                </div>
-                
-                <!-- عرض تجميلي لرقم العداد -->
-                <div class="meter-input-group">
-                    <div class="meter-input-part" id="part1">02680</div>
-                    <div class="meter-input-part" id="part2"></div>
-                    <div class="meter-input-part" id="part3"></div>
-                </div>
+                <div class="error-message" id="meterError">❌ رقم العداد يجب أن يكون 13 رقماً ويبدأ بـ 02680</div>
             </div>
-            
-            <h3 style="margin-bottom: 15px; text-align: center; color: var(--primary);">اختر طريقة الدفع:</h3>
-            
+
+            <h3 style="margin-bottom:15px; text-align:center; color:var(--primary);">اختر طريقة الدفع:</h3>
+
             <div class="payment-options">
                 <div class="payment-option" data-method="adfa3ly">
-                    <div class="payment-icon">
-                        <!-- سيتم تحميل الصورة عبر JavaScript -->
-                    </div>
+                    <div class="payment-icon"><i class="fas fa-mobile-alt" style="font-size:40px; color:#00a2ff;"></i></div>
                     <h3>أدفع لي</h3>
                     <p>الدفع عبر رقم الهاتف</p>
                 </div>
-                
+
                 <div class="payment-option" data-method="mobicash">
-                    <div class="payment-icon">
-                        <!-- سيتم تحميل الصورة عبر JavaScript -->
-                    </div>
+                    <div class="payment-icon"><i class="fas fa-credit-card" style="font-size:40px; color:#6e3cba;"></i></div>
                     <h3>موبي كاش</h3>
                     <p>الدفع عبر البطاقة</p>
                 </div>
             </div>
-            
-            <button class="btn" id="continueButton" disabled>
-                <i class="fas fa-arrow-left"></i> استمرار
-            </button>
+
+            <button class="btn" id="continueButton" disabled><i class="fas fa-arrow-left"></i> استمرار</button>
         </div>
-        
-        <!-- نموذج أدفع لي -->
+
+        <!-- أدفع لي -->
         <div class="form-container hidden" id="adfa3lyForm">
-            <h2 style="text-align: center; margin-bottom: 20px; color: var(--primary);">الدفع عبر أدفع لي</h2>
-            
-            <div class="fee-notice">
-                <i class="fas fa-info-circle"></i>
-                <span id="feeText">قيمة الخدمة 10% (للمبالغ أقل من 100 دينار) أو 5% (للمبالغ 100 دينار فأكثر)</span>
-            </div>
-            
+            <h2 style="text-align:center; margin-bottom:20px; color:var(--primary);">الدفع عبر أدفع لي</h2>
+
+            <div class="fee-notice"><i class="fas fa-info-circle"></i> <span>أدخل بيانات العميل لإتمام عملية الشحن</span></div>
+            <div class="amount-notice"><i class="fas fa-exclamation-circle"></i> <span>أقل قيمة للتعبئة 30 دينار</span></div>
+
             <div class="form-group">
-                <label for="phoneNumber">رقم الهاتف</label>
-                <input type="text" id="phoneNumber" placeholder="أدخل رقم الهاتف" required>
+              <label for="customerMobile">رقم هاتف العميل</label>
+                <input type="text" id="customerMobile" placeholder=" 09xxxxxxxx" required>
+                <small style="color:var(--gray); font-size:12px;">رقم هاتف العميل المسجل في البنك</small>
             </div>
-            
+
             <div class="form-group">
                 <label for="amountAdfa3ly">المبلغ (دينار)</label>
-                <div class="amount-buttons">
-                    <div class="amount-btn" data-amount="30">30</div>
-                    <div class="amount-btn" data-amount="50">50</div>
-                    <div class="amount-btn" data-amount="100">100</div>
-                </div>
                 <input type="number" id="amountAdfa3ly" placeholder="أدخل المبلغ (30 دينار كحد أدنى)" min="30" required>
-                
                 <div class="amount-details hidden" id="amountDetailsAdfa3ly">
-                    <div class="amount-breakdown">
-                        <span>المبلغ المدخل:</span>
-                        <span id="enteredAmountAdfa3ly">0</span> دينار
-                    </div>
-                    <div class="amount-breakdown">
-                        <span>قيمة الخدمة (<span id="feePercentageAdfa3ly">0</span>%):</span>
-                        <span id="serviceFeeAdfa3ly">0</span> دينار
-                    </div>
-                    <div class="amount-breakdown final-amount">
-                        <span>المبلغ الفعلي:</span>
-                        <span id="finalAmountAdfa3ly">0</span> دينار
-                    </div>
+                    <div class="amount-breakdown"><span>المبلغ المدخل:</span><span id="enteredAmountAdfa3ly">0</span> دينار</div>
+                    <div class="amount-breakdown"><span>قيمة الخدمة (<span id="feePercentageAdfa3ly">0</span>%):</span><span id="serviceFeeAdfa3ly">0</span> دينار</div>
+                    <div class="amount-breakdown final-amount"><span>المبلغ الفعلي:</span><span id="finalAmountAdfa3ly">0</span> دينار</div>
                 </div>
+                <div class="review-box hidden" id="reviewBoxAdfa3ly"></div>
             </div>
-            
-            <button class="btn" id="submitAdfa3ly">
-                <i class="fab fa-whatsapp"></i> إرسال عبر واتساب
-            </button>
+
+            <div class="transaction-status" id="transactionStatus"><i class="fas fa-sync-alt fa-spin"></i> <span id="statusMessage">جاري معالجة الطلب...</span></div>
+
+            <div class="confirmation-step" id="confirmationStep">
+                <h3 style="color:var(--primary); margin-bottom:15px;">تأكيد العملية</h3>
+                <p style="margin-bottom:15px;">تم إرسال رمز التحقق إلى هاتف العميل</p>
+                <div class="form-group">
+                    <label for="confirmationPin">رمز التحقق (4 أرقام)</label>
+                    <input type="text" id="confirmationPin" class="confirmation-input" placeholder="____" maxlength="4" inputmode="numeric">
+                </div>
+                <button class="btn" id="confirmTransaction"><i class="fas fa-check-circle"></i> تأكيد العملية</button>
+            </div>
+
+            <button class="btn" id="initiatePayment"><i class="fas fa-play-circle"></i> بدء عملية الدفع</button>
         </div>
-        
-        <!-- نموذج موبي كاش -->
+
+        <!-- موبي كاش -->
         <div class="form-container hidden" id="mobicashForm">
-            <h2 style="text-align: center; margin-bottom: 20px; color: var(--primary);">الدفع عبر موبي كاش</h2>
-            
-            <div class="fee-notice">
-                <i class="fas fa-info-circle"></i>
-                <span id="feeTextMobicash">قيمة الخدمة 10% (للمبالغ أقل من 100 دينار) أو 5% (للمبالغ 100 دينار فأكثر)</span>
-            </div>
-            
+            <h2 style="text-align:center; margin-bottom:20px; color:var(--primary);">الدفع عبر موبي كاش</h2>
+
+            <div class="fee-notice"><i class="fas fa-info-circle"></i> <span>سيتم تحويلك إلى بوابة الدفع لإتمام العملية</span></div>
+            <div class="amount-notice"><i class="fas fa-exclamation-circle"></i> <span>أقل قيمة للتعبئة 30 دينار</span></div>
+
             <div class="form-group">
                 <label for="cardNumber">رقم البطاقة</label>
                 <input type="text" id="cardNumber" placeholder="أدخل رقم البطاقة" required>
             </div>
-            
+
             <div class="form-group">
                 <label for="amountMobicash">المبلغ (دينار)</label>
-                <div class="amount-buttons">
-                    <div class="amount-btn" data-amount="30">30</div>
-                    <div class="amount-btn" data-amount="50">50</div>
-                    <div class="amount-btn" data-amount="100">100</div>
-                </div>
                 <input type="number" id="amountMobicash" placeholder="أدخل المبلغ (30 دينار كحد أدنى)" min="30" required>
-                
-                <div class="amount-details hidden" id="amountDetailsMobicash">
-                    <div class="amount-breakdown">
-                        <span>المبلغ المدخل:</span>
-                        <span id="enteredAmountMobicash">0</span> دينار
-                    </div>
-                    <div class="amount-breakdown">
-                        <span>قيمة الخدمة (<span id="feePercentageMobicash">0</span>%):</span>
-                        <span id="serviceFeeMobicash">0</span> دينار
-                    </div>
-                    <div class="amount-breakdown final-amount">
-                        <span>المبلغ الفعلي:</span>
-                        <span id="finalAmountMobicash">0</span> دينار
-                    </div>
-                </div>
             </div>
-            
-            <button class="btn" id="submitMobicash">
-                <i class="fab fa-whatsapp"></i> إرسال عبر واتساب
-            </button>
+
+            <div class="review-box" id="reviewBoxMobicash" style="display:none;"></div>
+
+            <button class="btn" id="submitMobicash"><i class="fab fa-whatsapp"></i> إرسال عبر واتساب</button>
         </div>
     </div>
-    
+
     <footer>
-        <p>© 2025 نظام شحن الرصيد الكهربائي. جميع الحقوق محفوظة.</p>
+        <div>© 2025 نظام شحن الرصيد الكهربائي. جميع الحقوق محفوظة.</div>
+        <div class="support-line">📞 الدعم الفني: <a href="https://wa.me/218942381395" target="_blank" rel="noopener" style="color:var(--primary); text-decoration:none;">واتساب 0942381395</a></div>
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // العناصر الرئيسية
-            const mainMenu = document.getElementById('mainMenu');
-            const adfa3lyForm = document.getElementById('adfa3lyForm');
-            const mobicashForm = document.getElementById('mobicashForm');
-            const backButton = document.getElementById('backButton');
-            const continueButton = document.getElementById('continueButton');
-            const meterNumberInput = document.getElementById('meterNumber');
-            const meterValidationIcon = document.getElementById('meterValidationIcon');
-            const meterError = document.getElementById('meterError');
-            const part1 = document.getElementById('part1');
-            const part2 = document.getElementById('part2');
-            const part3 = document.getElementById('part3');
-            
-            // رقم الواتساب الهدف
-            const whatsappNumber = '218942381395';
-            
-            // رابط Google Apps Script الخاص بك
-            const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyjRbB1ZoC-TkjqJ9iZ8601hN-iYkrlo3x3_70g6u4_sic9YXq4T12nDYyignPHnGae/exec';
-            
-            // متغيرات التخزين
-            let selectedMethod = null;
-            let isMeterValid = false;
-            const paymentOptions = document.querySelectorAll('.payment-option');
-            
-            // تحميل الصور مباشرة عند بدء التشغيل
-            function loadCustomImages() {
-                const adfa3lyIcon = document.querySelector('[data-method="adfa3ly"] .payment-icon');
-                const mobicashIcon = document.querySelector('[data-method="mobicash"] .payment-icon');
+    // ======================
+    // إعداد الخدمة (Google Apps Script باستخدام JSONP)
+    // ======================
+    class BankPaymentService {
+        constructor() {
+            this.scriptURL = 'https://script.google.com/macros/s/AKfycbwg_kGgmHi1Q9D86cq32RXO7tjDFPU7uE7O-CJWMDPIhuOW4HQ3g5Rp6rNRkjq50ldc/exec';
+        }
+
+        // استخدام JSONP بدلاً من fetch لتجنب مشكلة CORS
+        doPTrans(customerMobile, amount) {
+            return new Promise((resolve, reject) => {
+                const callbackName = 'callback_' + Date.now();
+                const script = document.createElement('script');
                 
-                const adfa3lyImg = document.createElement('img');
-                const mobicashImg = document.createElement('img');
+                const url = `${this.scriptURL}?callback=${callbackName}&action=doPTrans&customerMobile=${encodeURIComponent(customerMobile)}&amount=${amount}`;
+                script.src = url;
                 
-                adfa3lyImg.src = 'https://strapi-uploads-bcd.s3.eu-north-1.amazonaws.com/uploads/pay_Me_82b51db387.png';
-                adfa3lyImg.alt = 'أدفع لي';
-                
-                mobicashImg.src = 'https://wb-api.dits.ly/storage/MkaSxIuyWdKnUpbYVAFpy5pU6fMi1Wd1sBi3Zk4X.png';
-                mobicashImg.alt = 'موبي كاش';
-                
-                adfa3lyIcon.appendChild(adfa3lyImg);
-                mobicashIcon.appendChild(mobicashImg);
-            }
-            
-            // حساب قيمة الخدمة والمبلغ الفعلي
-            function calculateServiceFee(amount) {
-                let feePercentage = 10; // 10% للمبالغ أقل من 100
-                if (amount >= 100) {
-                    feePercentage = 5; // 5% للمبالغ 100 فأكثر
-                }
-                
-                const serviceFee = (amount * feePercentage) / 100;
-                const finalAmount = amount + serviceFee;
-                
-                return {
-                    feePercentage,
-                    serviceFee: Math.round(serviceFee * 100) / 100,
-                    finalAmount: Math.round(finalAmount * 100) / 100
-                };
-            }
-            
-            // تحديث تفاصيل المبلغ
-            function updateAmountDetails(amount, method) {
-                const calculations = calculateServiceFee(amount);
-                
-                if (method === 'adfa3ly') {
-                    document.getElementById('enteredAmountAdfa3ly').textContent = amount;
-                    document.getElementById('feePercentageAdfa3ly').textContent = calculations.feePercentage;
-                    document.getElementById('serviceFeeAdfa3ly').textContent = calculations.serviceFee;
-                    document.getElementById('finalAmountAdfa3ly').textContent = calculations.finalAmount;
-                    document.getElementById('amountDetailsAdfa3ly').classList.remove('hidden');
-                } else {
-                    document.getElementById('enteredAmountMobicash').textContent = amount;
-                    document.getElementById('feePercentageMobicash').textContent = calculations.feePercentage;
-                    document.getElementById('serviceFeeMobicash').textContent = calculations.serviceFee;
-                    document.getElementById('finalAmountMobicash').textContent = calculations.finalAmount;
-                    document.getElementById('amountDetailsMobicash').classList.remove('hidden');
-                }
-            }
-            
-            // إرسال البيانات إلى Google Sheets (إصدار محسن)
-            async function sendToGoogleSheets(data) {
-                return new Promise((resolve) => {
-                    console.log('🔄 محاولة إرسال البيانات إلى Google Sheets...', data);
+                window[callbackName] = (response) => {
+                    delete window[callbackName];
+                    document.body.removeChild(script);
                     
-                    // الطريقة 1: استخدام FormData
-                    const formData = new FormData();
-                    Object.keys(data).forEach(key => {
-                        formData.append(key, data[key]);
-                    });
-                    
-                    // إضافة timestamp
-                    formData.append('timestamp', new Date().toISOString());
-                    
-                    // محاولة الإرسال
-                    fetch(GOOGLE_SCRIPT_URL, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        body: formData
-                    })
-                    .then(() => {
-                        console.log('✅ تم إرسال البيانات (no-cors mode)');
-                        resolve({ 
-                            success: true, 
-                            message: 'تم حفظ البيانات في النظام'
-                        });
-                    })
-                    .catch(error => {
-                        console.log('🔄 تجربة الطريقة البديلة...');
-                        
-                        // الطريقة 2: استخدام GET parameters
-                        const params = new URLSearchParams();
-                        Object.keys(data).forEach(key => {
-                            params.append(key, data[key]);
-                        });
-                        
-                        // استخدام صورة للطلب
-                        const img = new Image();
-                        img.src = `${GOOGLE_SCRIPT_URL}?${params.toString()}&method=img&time=${Date.now()}`;
-                        
-                        img.onload = () => {
-                            console.log('✅ تم إرسال البيانات عبر GET');
-                            resolve({ 
-                                success: true, 
-                                message: 'تم حفظ البيانات'
-                            });
-                        };
-                        
-                        img.onerror = () => {
-                            console.log('⚠️ تم إرسال الطلب بدون تأكيد');
-                            resolve({ 
-                                success: true, 
-                                message: 'تم استلام الطلب'
-                            });
-                        };
-                        
-                        // fallback بعد 1 ثانية
-                        setTimeout(() => {
-                            resolve({ 
-                                success: true, 
-                                message: 'تم استلام الطلب'
-                            });
-                        }, 1000);
-                    });
-                });
-            }
-            
-            // تحميل الصور فوراً
-            loadCustomImages();
-            
-            // التحقق من صحة رقم العداد
-            function validateMeterNumber(number) {
-                if (number.length !== 13) {
-                    return false;
-                }
-                
-                if (!/^\d+$/.test(number)) {
-                    return false;
-                }
-                
-                if (!number.startsWith('02680')) {
-                    return false;
-                }
-                
-                return true;
-            }
-            
-            // تحديث العرض التجميعي لرقم العداد
-            function updateMeterDisplay(number) {
-                if (number.length >= 5) {
-                    part1.textContent = number.substring(0, 5);
-                    part1.classList.add('highlight');
-                } else {
-                    part1.textContent = '02680';
-                    part1.classList.remove('highlight');
-                }
-                
-                if (number.length >= 10) {
-                    part2.textContent = number.substring(5, 10);
-                    part2.classList.add('highlight');
-                } else {
-                    part2.textContent = '';
-                    part2.classList.remove('highlight');
-                }
-                
-                if (number.length >= 13) {
-                    part3.textContent = number.substring(10, 13);
-                    part3.classList.add('highlight');
-                } else {
-                    part3.textContent = '';
-                    part3.classList.remove('highlight');
-                }
-            }
-            
-            // التحقق في الوقت الحقيقي من رقم العداد
-            meterNumberInput.addEventListener('input', function() {
-                const value = this.value;
-                
-                this.value = value.replace(/\D/g, '');
-                
-                updateMeterDisplay(this.value);
-                
-                isMeterValid = validateMeterNumber(this.value);
-                
-                if (this.value.length > 0) {
-                    meterValidationIcon.classList.remove('hidden');
-                    
-                    if (isMeterValid) {
-                        meterValidationIcon.className = 'validation-icon valid';
-                        meterValidationIcon.innerHTML = '<i class="fas fa-check-circle"></i>';
-                        meterError.style.display = 'none';
+                    if (response && response.success) {
+                        resolve(response.data);
                     } else {
-                        meterValidationIcon.className = 'validation-icon invalid';
-                        meterValidationIcon.innerHTML = '<i class="fas fa-times-circle"></i>';
-                        meterError.style.display = 'block';
+                        reject(new Error(response?.error || 'خطأ في doPTrans'));
                     }
-                } else {
-                    meterValidationIcon.classList.add('hidden');
-                    meterError.style.display = 'none';
-                }
+                };
                 
+                script.onerror = () => {
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    reject(new Error('فشل في الاتصال بالخادم'));
+                };
+                
+                document.body.appendChild(script);
+                
+                // Timeout بعد 30 ثانية
+                setTimeout(() => {
+                    if (window[callbackName]) {
+                        delete window[callbackName];
+                        document.body.removeChild(script);
+                        reject(new Error('انتهت مهلة الاتصال'));
+                    }
+                }, 30000);
+            });
+        }
+
+        onlineConfTrans(sessionID, confirmationPin) {
+            return new Promise((resolve, reject) => {
+                const callbackName = 'callback_' + Date.now();
+                const script = document.createElement('script');
+                
+                const url = `${this.scriptURL}?callback=${callbackName}&action=onlineConfTrans&sessionID=${encodeURIComponent(sessionID)}&confirmationPin=${encodeURIComponent(confirmationPin)}`;
+                script.src = url;
+                
+                window[callbackName] = (response) => {
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    
+                    if (response && response.success) {
+                        resolve(response.data);
+                    } else {
+                        reject(new Error(response?.error || 'خطأ في onlineConfTrans'));
+                    }
+                };
+                
+                script.onerror = () => {
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    reject(new Error('فشل في الاتصال بالخادم'));
+                };
+                
+                document.body.appendChild(script);
+                
+                setTimeout(() => {
+                    if (window[callbackName]) {
+                        delete window[callbackName];
+                        document.body.removeChild(script);
+                        reject(new Error('انتهت مهلة الاتصال'));
+                    }
+                }, 30000);
+            });
+        }
+
+        saveToSheets(data) {
+            return new Promise((resolve, reject) => {
+                const callbackName = 'callback_' + Date.now();
+                const script = document.createElement('script');
+                
+                // تحويل البيانات إلى parameters
+                let url = `${this.scriptURL}?callback=${callbackName}&action=saveToSheets`;
+                Object.keys(data).forEach(key => {
+                    url += `&${key}=${encodeURIComponent(data[key])}`;
+                });
+                
+                script.src = url;
+                
+                window[callbackName] = (response) => {
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    
+                    if (response && response.success) {
+                        resolve(response.data);
+                    } else {
+                        reject(new Error(response?.error || 'خطأ في saveToSheets'));
+                    }
+                };
+                
+                script.onerror = () => {
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    reject(new Error('فشل في الاتصال بالخادم'));
+                };
+                
+                document.body.appendChild(script);
+                
+                setTimeout(() => {
+                    if (window[callbackName]) {
+                        delete window[callbackName];
+                        document.body.removeChild(script);
+                        reject(new Error('انتهت مهلة الاتصال'));
+                    }
+                }, 30000);
+            });
+        }
+    }
+
+    // ======================
+    // المكوّن الرئيسي للواجهة
+    // ======================
+    document.addEventListener('DOMContentLoaded', function() {
+        const mainMenu = document.getElementById('mainMenu');
+        const adfa3lyForm = document.getElementById('adfa3lyForm');
+        const mobicashForm = document.getElementById('mobicashForm');
+        const backButton = document.getElementById('backButton');
+        const continueButton = document.getElementById('continueButton');
+        const meterNumberInput = document.getElementById('meterNumber');
+        const meterValidationIcon = document.getElementById('meterValidationIcon');
+        const meterError = document.getElementById('meterError');
+
+        const bankService = new BankPaymentService();
+        let currentSessionID = null;
+        let selectedMethod = null;
+        let isMeterValid = false;
+        const paymentOptions = document.querySelectorAll('.payment-option');
+
+        const SUPPORT_PHONE_PLAIN = '218942381395';
+        const SUPPORT_PHONE_DISPLAY = '0942381395';
+
+        // ======= دوال مساعدة عامة =======
+        function setStatus(type, message) {
+            const el = document.getElementById('transactionStatus');
+            el.style.display = 'block';
+            el.className = `transaction-status status-${type}`;
+            const iconClass = (type === 'processing') ? 'sync-alt fa-spin' : (type === 'success' ? 'check-circle' : 'times-circle');
+            el.innerHTML = `<i class="fas fa-${iconClass}"></i> <span id="statusMessage">${message}</span>`;
+        }
+
+        function clearStatus() {
+            const el = document.getElementById('transactionStatus');
+            el.style.display = 'none';
+            el.className = 'transaction-status';
+            el.innerHTML = '';
+        }
+
+        function formatLibyanPhone(phoneRaw) {
+            if (!phoneRaw) return '';
+            let num = phoneRaw.replace(/\D/g,'');
+            if (num.startsWith('0') && !num.startsWith('218')) {
+                num = num.replace(/^0+/, '');
+            }
+            if (num.length === 9 && num.startsWith('9')) {
+                return '+218' + num;
+            }
+            if (num.length === 12 && num.startsWith('218')) {
+                return '+' + num;
+            }
+            if (num.startsWith('+')) return num;
+            if (num.length === 10 && num.startsWith('09')) {
+                return '+218' + num.slice(1);
+            }
+            return (num.length > 0 && !num.startsWith('+')) ? ('+' + num) : num;
+        }
+
+        function calculateServiceFee(amount) {
+            let feePercentage = 10;
+            if (amount >= 100) feePercentage = 5;
+            const serviceFee = (amount * feePercentage) / 100;
+            const finalAmount = amount + serviceFee;
+            return { feePercentage, serviceFee: Math.round(serviceFee * 100) / 100, finalAmount: Math.round(finalAmount * 100) / 100 };
+        }
+
+        function showReviewAdfa3ly(mobile, amount) {
+            const box = document.getElementById('reviewBoxAdfa3ly');
+            const calc = calculateServiceFee(amount);
+            box.innerHTML = `
+                <b>ملخص الدفع:</b><br>
+                • رقم العداد: ${document.getElementById('meterNumber').value}<br>
+                • رقم العميل: ${mobile}<br>
+                • المبلغ: ${amount} د.ل<br>
+                • رسوم الخدمة: ${calc.serviceFee} د.ل (${calc.feePercentage}%)<br>
+                • إجمالي الدفع: ${calc.finalAmount} د.ل
+            `;
+            box.classList.remove('hidden');
+        }
+
+        function hideReviewAdfa3ly() {
+            const box = document.getElementById('reviewBoxAdfa3ly');
+            box.classList.add('hidden');
+            box.innerHTML = '';
+        }
+
+        function saveLastTransactionLocal(tx) {
+            try {
+                localStorage.setItem('lastTransaction', JSON.stringify(tx));
+            } catch (e) {
+                console.warn('فشل في حفظ المعاملة محلياً', e);
+            }
+        }
+
+        // ======= تحقق رقم العداد =======
+        function validateMeterNumber(number) {
+            if (!number) return false;
+            if (number.length !== 13) return false;
+            if (!/^\d{13}$/.test(number)) return false;
+            if (!number.startsWith('02680')) return false;
+            return true;
+        }
+
+        // أحداث الإدخال لرقم العداد
+        meterNumberInput.addEventListener('input', function() {
+            const value = this.value.replace(/\D/g,'');
+            this.value = value;
+            isMeterValid = validateMeterNumber(this.value);
+            if (this.value.length > 0) {
+                meterValidationIcon.classList.remove('hidden');
+                if (isMeterValid) {
+                    meterValidationIcon.className = 'validation-icon valid';
+                    meterValidationIcon.innerHTML = '<i class="fas fa-check-circle"></i>';
+                    meterError.style.display = 'none';
+                } else {
+                    meterValidationIcon.className = 'validation-icon invalid';
+                    meterValidationIcon.innerHTML = '<i class="fas fa-times-circle"></i>';
+                    meterError.style.display = 'block';
+                }
+            } else {
+                meterValidationIcon.classList.add('hidden');
+                meterError.style.display = 'none';
+            }
+            updateContinueButton();
+        });
+
+        function updateContinueButton() {
+            continueButton.disabled = !(isMeterValid && selectedMethod);
+        }
+
+        // اختيار طريقة الدفع
+        paymentOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                paymentOptions.forEach(op => op.classList.remove('active'));
+                this.classList.add('active');
+                selectedMethod = this.dataset.method;
                 updateContinueButton();
             });
-            
-            // تحديث حالة زر الاستمرار
-            function updateContinueButton() {
-                if (isMeterValid && selectedMethod) {
-                    continueButton.disabled = false;
-                } else {
-                    continueButton.disabled = true;
-                }
-            }
-            
-            // اختيار طريقة الدفع
-            paymentOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    paymentOptions.forEach(op => op.classList.remove('active'));
-                    this.classList.add('active');
-                    selectedMethod = this.dataset.method;
-                    updateContinueButton();
-                });
-            });
-            
-            // زر الاستمرار
-            continueButton.addEventListener('click', function() {
-                if (!isMeterValid) {
-                    alert('يرجى إدخال رقم عداد صحيح');
-                    return;
-                }
-                
-                if (!selectedMethod) {
-                    alert('يرجى اختيار طريقة الدفع');
-                    return;
-                }
-                
-                mainMenu.classList.add('hidden');
-                backButton.classList.remove('hidden');
-                
-                if (selectedMethod === 'adfa3ly') {
-                    adfa3lyForm.classList.remove('hidden');
-                } else {
-                    mobicashForm.classList.remove('hidden');
-                }
-            });
-            
-            // زر الرجوع
-            backButton.addEventListener('click', function() {
-                adfa3lyForm.classList.add('hidden');
-                mobicashForm.classList.add('hidden');
-                mainMenu.classList.remove('hidden');
-                backButton.classList.add('hidden');
-            });
-            
-            // أزرار اختيار المبلغ
-            const amountButtons = document.querySelectorAll('.amount-btn');
-            amountButtons.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    amountButtons.forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    const amount = parseInt(this.dataset.amount);
-                    if (selectedMethod === 'adfa3ly') {
-                        document.getElementById('amountAdfa3ly').value = amount;
-                        updateAmountDetails(amount, 'adfa3ly');
-                    } else {
-                        document.getElementById('amountMobicash').value = amount;
-                        updateAmountDetails(amount, 'mobicash');
-                    }
-                });
-            });
-            
-            // تحديث تفاصيل المبلغ عند الإدخال اليدوي
-            document.getElementById('amountAdfa3ly').addEventListener('input', function() {
-                const amount = parseInt(this.value) || 0;
-                if (amount >= 30) {
-                    updateAmountDetails(amount, 'adfa3ly');
-                } else {
-                    document.getElementById('amountDetailsAdfa3ly').classList.add('hidden');
-                }
-            });
-            
-            document.getElementById('amountMobicash').addEventListener('input', function() {
-                const amount = parseInt(this.value) || 0;
-                if (amount >= 30) {
-                    updateAmountDetails(amount, 'mobicash');
-                } else {
-                    document.getElementById('amountDetailsMobicash').classList.add('hidden');
-                }
-            });
-            
-            // إرسال نموذج أدفع لي (بدون انتظار)
-            document.getElementById('submitAdfa3ly').addEventListener('click', async function() {
-                const meterNumber = document.getElementById('meterNumber').value;
-                const phoneNumber = document.getElementById('phoneNumber').value;
-                const amountInput = document.getElementById('amountAdfa3ly').value;
-                const amount = parseInt(amountInput);
-                
-                if (!phoneNumber) {
-                    alert('يرجى إدخال رقم الهاتف');
-                    return;
-                }
-                
-                if (!amount || amount < 30) {
-                    alert('يرجى إدخال مبلغ صحيح لا يقل عن 30 دينار');
-                    return;
-                }
-                
-                const calculations = calculateServiceFee(amount);
-                
-                // بيانات لإرسالها إلى Google Sheets
-                const formData = {
-                    meterNumber: meterNumber,
-                    paymentMethod: 'أدفع لي',
-                    phoneNumber: phoneNumber,
-                    amount: amount,
-                    serviceFee: calculations.serviceFee,
-                    feePercentage: calculations.feePercentage,
-                    finalAmount: calculations.finalAmount,
-                    status: 'معلق',
-                    timestamp: new Date().toISOString()
-                };
-                
-                // إرسال البيانات إلى Google Sheets (في الخلفية)
-                sendToGoogleSheets(formData).then(result => {
-                    console.log('✅ تم حفظ البيانات:', result);
-                });
-                
-                // إنشاء رسالة واتساب والانتقال فوراً
-                const whatsappMessage = `طلب شحن رصيد كهربائي%0A%0A📋 تفاصيل الطلب:%0A───────────────%0A• رقم العداد: ${meterNumber}%0A• طريقة الدفع: أدفع لي%0A• رقم الهاتف: ${phoneNumber}%0A• المبلغ المطلوب: ${amount} دينار%0A• قيمة الخدمة: ${calculations.serviceFee} دينار (${calculations.feePercentage}%)%0A• المبلغ الإجمالي: ${calculations.finalAmount} دينار%0A%0A⏰ ${new Date().toLocaleString('ar-LY')}`;
-                
-                // الانتقال المباشر إلى واتساب
-                window.location.href = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${whatsappMessage}`;
-            });
-            
-            // إرسال نموذج موبي كاش (بدون انتظار)
-            document.getElementById('submitMobicash').addEventListener('click', async function() {
-                const meterNumber = document.getElementById('meterNumber').value;
-                const cardNumber = document.getElementById('cardNumber').value;
-                const amountInput = document.getElementById('amountMobicash').value;
-                const amount = parseInt(amountInput);
-                
-                if (!cardNumber) {
-                    alert('يرجى إدخال رقم البطاقة');
-                    return;
-                }
-                
-                if (!amount || amount < 30) {
-                    alert('يرجى إدخال مبلغ صحيح لا يقل عن 30 دينار');
-                    return;
-                }
-                
-                const calculations = calculateServiceFee(amount);
-                
-                // بيانات لإرسالها إلى Google Sheets
-                const formData = {
-                    meterNumber: meterNumber,
-                    paymentMethod: 'موبي كاش',
-                    cardNumber: cardNumber,
-                    amount: amount,
-                    serviceFee: calculations.serviceFee,
-                    feePercentage: calculations.feePercentage,
-                    finalAmount: calculations.finalAmount,
-                    status: 'معلق',
-                    timestamp: new Date().toISOString()
-                };
-                
-                // إرسال البيانات إلى Google Sheets (في الخلفية)
-                sendToGoogleSheets(formData).then(result => {
-                    console.log('✅ تم حفظ البيانات:', result);
-                });
-                
-                // إنشاء رسالة واتساب والانتقال فوراً
-                const whatsappMessage = `طلب شحن رصيد كهربائي%0A%0A📋 تفاصيل الطلب:%0A───────────────%0A• رقم العداد: ${meterNumber}%0A• طريقة الدفع: موبي كاش%0A• رقم البطاقة: ${cardNumber}%0A• المبلغ المطلوب: ${amount} دينار%0A• قيمة الخدمة: ${calculations.serviceFee} دينار (${calculations.feePercentage}%)%0A• المبلغ الإجمالي: ${calculations.finalAmount} دينار%0A%0A⏰ ${new Date().toLocaleString('ar-LY')}`;
-                
-                // الانتقال المباشر إلى واتساب
-                window.location.href = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${whatsappMessage}`;
-            });
         });
+
+        // زر استمرار
+        continueButton.addEventListener('click', function() {
+            if (!isMeterValid) { alert('يرجى إدخال رقم عداد صحيح'); return; }
+            if (!selectedMethod) { alert('يرجى اختيار طريقة الدفع'); return; }
+            mainMenu.classList.add('hidden');
+            backButton.classList.remove('hidden');
+            if (selectedMethod === 'adfa3ly') {
+                adfa3lyForm.classList.remove('hidden');
+            } else {
+                mobicashForm.classList.remove('hidden');
+            }
+        });
+
+        // زر رجوع
+        backButton.addEventListener('click', function() {
+            adfa3lyForm.classList.add('hidden');
+            mobicashForm.classList.add('hidden');
+            mainMenu.classList.remove('hidden');
+            backButton.classList.add('hidden');
+            resetTransactionUI();
+            hideReviewAdfa3ly();
+        });
+
+        // تحديث الملخص عند تغيير المبلغ في أدفع لي
+        document.getElementById('amountAdfa3ly').addEventListener('input', function() {
+            const amount = parseFloat(this.value) || 0;
+            if (amount >= 30) {
+                document.getElementById('enteredAmountAdfa3ly').textContent = amount;
+                const calc = calculateServiceFee(amount);
+                document.getElementById('feePercentageAdfa3ly').textContent = calc.feePercentage;
+                document.getElementById('serviceFeeAdfa3ly').textContent = calc.serviceFee;
+                document.getElementById('finalAmountAdfa3ly').textContent = calc.finalAmount;
+                document.getElementById('amountDetailsAdfa3ly').classList.remove('hidden');
+
+                const formattedMobile = formatLibyanPhone(document.getElementById('customerMobile').value);
+                showReviewAdfa3ly(formattedMobile, amount);
+            } else {
+                document.getElementById('amountDetailsAdfa3ly').classList.add('hidden');
+                hideReviewAdfa3ly();
+            }
+        });
+
+        // تحديث الملخص عند تغيير رقم العميل أيضاً
+        document.getElementById('customerMobile').addEventListener('input', function() {
+            const amount = parseFloat(document.getElementById('amountAdfa3ly').value) || 0;
+            if (amount >= 30) {
+                const formattedMobile = formatLibyanPhone(this.value);
+                showReviewAdfa3ly(formattedMobile, amount);
+            }
+        });
+// بدء عملية الدفع لأدفع لي
+document.getElementById('initiatePayment').addEventListener('click', async function() {
+    const meterNumber = document.getElementById('meterNumber').value;
+    const customerMobileRaw = document.getElementById('customerMobile').value;
+    const customerMobile = formatLibyanPhone(customerMobileRaw);
+    const amountInput = document.getElementById('amountAdfa3ly').value;
+    const originalAmount = parseFloat(amountInput); // المبلغ الأصلي المدخل من المستخدم
+
+    if (!customerMobileRaw) { alert('يرجى إدخال رقم هاتف العميل'); return; }
+    if (!originalAmount || originalAmount < 30) { alert('يرجى إدخال مبلغ صحيح لا يقل عن 30 دينار'); return; }
+
+    // تحقق تنسيق الهاتف بعد الفورمات
+    if (!customerMobile.startsWith('+218') || customerMobile.length < 12) {
+        alert('رقم الهاتف يجب أن يكون رقم ليبي صالح (09xxxxxxxx)');
+        return;
+    }
+
+    // احسب نسبة الخدمة والمبلغ الإجمالي
+    const calc = calculateServiceFee(originalAmount);
+    const totalAmount = calc.finalAmount; // المبلغ الإجمالي (الأصلي + النسبة)
+
+    // حفظ مسودة المعاملة محليًا
+    saveLastTransactionLocal({ 
+        type: 'adfa3ly', 
+        meterNumber, 
+        customerMobile, 
+        originalAmount: originalAmount,
+        serviceFee: calc.serviceFee,
+        totalAmount: totalAmount,
+        status: 'started', 
+        ts: new Date().toISOString() 
+    });
+
+    setStatus('processing', 'جاري معالجة الطلب...');
+    this.disabled = true;
+
+    try {
+        // استدعاء DoPTrans باستخدام JSONP - إرسال المبلغ الإجمالي (الأصلي + النسبة)
+        const result = await bankService.doPTrans(customerMobile, totalAmount);
+
+        // نحفظ النتيجة المبدئية في Google Sheets كـ pending (حتى يتم تأكيد OTP)
+        await bankService.saveToSheets({
+            meterNumber,
+            paymentMethod: 'أدفع لي',
+            customerMobile,
+            originalAmount: originalAmount,
+            serviceFee: calc.serviceFee,
+            totalAmount: totalAmount,
+            status: 'pending',
+            sessionID: result,
+            notes: 'تم إنشاء الجلسة - في انتظار التأكيد'
+        });
+
+        currentSessionID = result;
+        document.getElementById('initiatePayment').style.display = 'none';
+        document.getElementById('confirmationStep').style.display = 'block';
+        setStatus('success', 'تم إرسال رمز التحقق إلى هاتف العميل');
+
+    } catch (error) {
+        // عند حدوث خطأ أثناء DoPTrans -> سجل الفشل في Google Sheets
+        const errMsg = (error && error.message) ? error.message : 'خطأ غير معروف';
+        try {
+            await bankService.saveToSheets({
+                meterNumber,
+                paymentMethod: 'أدفع لي',
+                customerMobile,
+                originalAmount: originalAmount,
+                serviceFee: calc.serviceFee,
+                totalAmount: totalAmount,
+                status: 'failed',
+                sessionID: currentSessionID || '',
+                notes: `خطأ أثناء DoPTrans: ${errMsg}`
+            });
+        } catch (saveErr) {
+            console.warn('فشل في حفظ الفشل إلى Google Sheets:', saveErr);
+        }
+
+        let userMessage = errMsg;
+        if (errMsg.includes('HTTP 500')) userMessage = 'الخدمة غير متاحة حالياً. يرجى المحاولة لاحقاً.';
+        else if (errMsg.toLowerCase().includes('network') || errMsg.toLowerCase().includes('fetch')) userMessage = 'خطأ في الاتصال بالشبكة. تأكد من اتصال الإنترنت.';
+        else if (errMsg.toLowerCase().includes('parse')) userMessage = 'استجابة غير متوقعة من الخدمة. يرجى المحاولة مرة أخرى.';
+
+        setStatus('error', userMessage);
+        this.disabled = false;
+    }
+});;
+// تأكيد العملية (OnlineConfTrans)
+document.getElementById('confirmTransaction').addEventListener('click', async function() {
+    const meterNumber = document.getElementById('meterNumber').value;
+    const customerMobile = formatLibyanPhone(document.getElementById('customerMobile').value);
+    const amountInput = document.getElementById('amountAdfa3ly').value;
+    const originalAmount = parseFloat(amountInput); // المبلغ الأصلي
+    const calc = calculateServiceFee(originalAmount); // احسب الرسوم
+    const totalAmount = calc.finalAmount; // المبلغ الإجمالي
+    const confirmationPin = document.getElementById('confirmationPin').value;
+
+    if (!confirmationPin || confirmationPin.length !== 4) { alert('يرجى إدخال رمز التحقق المكون من 4 أرقام'); return; }
+
+    setStatus('processing', 'جاري تأكيد العملية...');
+    this.disabled = true;
+
+    try {
+        const result = await bankService.onlineConfTrans(currentSessionID, confirmationPin);
+
+        // إذا كانت النتيجة OK -> عملية ناجحة
+        if (result === 'OK' || result === 'Success' || result === 'OKAY') {
+            setStatus('success', 'تمت العملية بنجاح! جاري حفظ البيانات...');
+
+            // حفظ نجاح العملية في Google Sheets
+            await bankService.saveToSheets({
+                meterNumber,
+                paymentMethod: 'أدفع لي',
+                customerMobile,
+                originalAmount: originalAmount,
+                serviceFee: calc.serviceFee,
+                totalAmount: totalAmount,
+                status: 'completed',
+                sessionID: currentSessionID,
+                notes: 'تم التأكيد بنجاح'
+            });
+
+            // إرسال رسالة واتساب إلى الدعم الفني مع تفاصيل العملية
+            const whatsappText = encodeURIComponent(
+`طلب شحن رصيد كهربائي
+───────────────
+• رقم العداد: ${meterNumber}
+• طريقة الدفع: أدفع لي
+• رقم الزبون: ${customerMobile}
+• المبلغ الأصلي: ${originalAmount} د.ل
+• قيمة الخدمة: ${calc.serviceFee} د.ل (${calc.feePercentage}%)
+• إجمالي الدفع: ${totalAmount} د.ل
+• وقت التنفيذ: ${new Date().toLocaleString('ar-LY')}
+-----------------
+تمت العملية بنجاح.`
+            );
+
+            // ارسال للرقم الثابت للدعم
+            window.open(`https://api.whatsapp.com/send?phone=${SUPPORT_PHONE_PLAIN}&text=${whatsappText}`, '_blank');
+
+            // حفظ محليًا كأحدث معاملة
+            saveLastTransactionLocal({ 
+                type: 'adfa3ly', 
+                meterNumber, 
+                customerMobile, 
+                originalAmount: originalAmount,
+                serviceFee: calc.serviceFee,
+                totalAmount: totalAmount,
+                status: 'completed', 
+                sessionID: currentSessionID, 
+                ts: new Date().toISOString() 
+            });
+
+            // إعادة تعيين
+            setTimeout(() => {
+                resetForm();
+                alert('تم الدفع بنجاح!');
+            }, 1500);
+
+        } else {
+            // في حال أي رد غير OK -> اعتباره فشل تأكيد
+            const note = `فشل في تأكيد العملية: ${result}`;
+            await bankService.saveToSheets({
+                meterNumber,
+                paymentMethod: 'أدفع لي',
+                customerMobile,
+                originalAmount: originalAmount,
+                serviceFee: calc.serviceFee,
+                totalAmount: totalAmount,
+                status: 'failed',
+                sessionID: currentSessionID,
+                notes: note
+            });
+
+            setStatus('error', `تأكد من رقم التحقق ${result}`);
+            this.disabled = false;
+        }
+
+    } catch (error) {
+        const errMsg = (error && error.message) ? error.message : 'خطأ غير معروف أثناء التأكيد';
+        try {
+            await bankService.saveToSheets({
+                meterNumber,
+                paymentMethod: 'أدفع لي',
+                customerMobile,
+                originalAmount: originalAmount,
+                serviceFee: calc.serviceFee,
+                totalAmount: totalAmount,
+                status: 'failed',
+                sessionID: currentSessionID || '',
+                notes: `خطأ أثناء OnlineConfTrans: ${errMsg}`
+            });
+        } catch (saveErr) {
+            console.warn('فشل في حفظ الفشل إلى Google Sheets:', saveErr);
+        }
+
+        let userMessage = errMsg;
+        if (errMsg.includes('HTTP 500')) userMessage = 'الخدمة غير متاحة حالياً. يرجى المحاولة لاحقاً.';
+        else if (errMsg.toLowerCase().includes('network') || errMsg.toLowerCase().includes('fetch')) userMessage = 'خطأ في الاتصال بالشبكة. تأكد من اتصال الإنترنت.';
+
+        setStatus('error', userMessage);
+        this.disabled = false;
+    }
+});
+
+        // إرسال موبي كاش -> فتح واتساب + حفظ في Google Sheets
+        document.getElementById('submitMobicash').addEventListener('click', async function() {
+            const meterNumber = document.getElementById('meterNumber').value;
+            const cardNumber = document.getElementById('cardNumber').value.trim();
+            const amountInput = document.getElementById('amountMobicash').value;
+            const amount = parseFloat(amountInput);
+
+            if (!cardNumber) { alert('يرجى إدخال رقم البطاقة'); return; }
+            if (!amount || amount < 30) { alert('يرجى إدخال مبلغ صحيح لا يقل عن 30 دينار'); return; }
+
+            // احسب الرسوم والملخص
+            const calc = calculateServiceFee(amount);
+
+            // حفظ الطلب في Google Sheets (status: pending)
+            try {
+                await bankService.saveToSheets({
+                    meterNumber,
+                    paymentMethod: 'Mobicash',
+                    cardNumber,
+                    amount,
+                    status: 'pending',
+                    sessionID: '',
+                    notes: 'تم إرسال طلب موبي كاش - انتظار معالجة يدوية'
+                });
+            } catch (err) {
+                console.warn('فشل في حفظ موبي كاش إلى Google Sheets:', err);
+            }
+
+            // إعداد رسالة واتساب
+            const whatsappMessage = `طلب شحن رصيد كهربائي%0A%0A📋 تفاصيل الطلب:%0A───────────────%0A• رقم العداد: ${meterNumber}%0A• طريقة الدفع: موبي كاش%0A• رقم البطاقة: ${cardNumber}%0A• المبلغ المطلوب: ${amount} دينار%0A• قيمة الخدمة: ${calc.serviceFee} دينار (${calc.feePercentage}%)%0A• المبلغ الإجمالي: ${calc.finalAmount} دينار%0A%0A⏰ ${new Date().toLocaleString('ar-LY')}`;
+
+            // فتح واتساب للدعم
+            window.open(`https://api.whatsapp.com/send?phone=${SUPPORT_PHONE_PLAIN}&text=${whatsappMessage}`, '_blank');
+
+            // حفظ محليًا
+            saveLastTransactionLocal({ type: 'mobicash', meterNumber, cardNumber, amount, status: 'pending', ts: new Date().toISOString() });
+
+            // إظهار إشعار نجاح مؤقت
+            setStatus('success', 'تم إرسال الطلب إلى واتساب وحفظه في Google Sheets (معلق).');
+            setTimeout(() => { clearStatus(); }, 2500);
+        });
+
+        // دوال مساعدة لإعادة تعيين
+        function resetTransactionUI() {
+            clearStatus();
+            document.getElementById('confirmationStep').style.display = 'none';
+            document.getElementById('initiatePayment').style.display = 'block';
+            document.getElementById('initiatePayment').disabled = false;
+            document.getElementById('confirmTransaction').disabled = false;
+            document.getElementById('confirmationPin').value = '';
+            currentSessionID = null;
+        }
+
+        function resetForm() {
+            document.getElementById('customerMobile').value = '';
+            document.getElementById('amountAdfa3ly').value = '';
+            document.getElementById('amountDetailsAdfa3ly').classList.add('hidden');
+            hideReviewAdfa3ly();
+            resetTransactionUI();
+            // ارجع للصفحة الرئيسية
+            adfa3lyForm.classList.add('hidden');
+            mobicashForm.classList.add('hidden');
+            mainMenu.classList.remove('hidden');
+            backButton.classList.add('hidden');
+        }
+
+    }); // DOMContentLoaded end
     </script>
 </body>
 </html>
