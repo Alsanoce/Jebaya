@@ -527,7 +527,7 @@ document.getElementById('initiatePayment').addEventListener('click', async funct
     const customerMobileRaw = document.getElementById('customerMobile').value;
     const customerMobile = formatLibyanPhone(customerMobileRaw);
     const amountInput = document.getElementById('amountAdfa3ly').value;
-    const originalAmount = parseFloat(amountInput); // المبلغ الأصلي المدخل من المستخدم
+    const originalAmount = parseFloat(amountInput);
 
     if (!customerMobileRaw) { alert('يرجى إدخال رقم هاتف العميل'); return; }
     if (!originalAmount || originalAmount < 30) { alert('يرجى إدخال مبلغ صحيح لا يقل عن 30 دينار'); return; }
@@ -540,7 +540,7 @@ document.getElementById('initiatePayment').addEventListener('click', async funct
 
     // احسب نسبة الخدمة والمبلغ الإجمالي
     const calc = calculateServiceFee(originalAmount);
-    const totalAmount = calc.finalAmount; // المبلغ الإجمالي (الأصلي + النسبة)
+    const totalAmount = calc.finalAmount;
 
     // حفظ مسودة المعاملة محليًا
     saveLastTransactionLocal({ 
@@ -558,10 +558,18 @@ document.getElementById('initiatePayment').addEventListener('click', async funct
     this.disabled = true;
 
     try {
-        // استدعاء DoPTrans باستخدام JSONP - إرسال المبلغ الإجمالي (الأصلي + النسبة)
+        // استدعاء DoPTrans باستخدام JSONP
         const result = await bankService.doPTrans(customerMobile, totalAmount);
+        
+        // ✅ التحقق من أن النتيجة تحتوي على SessionID (تعني نجاح العملية)
+        if (!result || result.includes('ACC') || result.includes('Error') || result.includes('Fail')) {
+            throw new Error(result || 'فشل في إنشاء الجلسة');
+        }
 
-        // نحفظ النتيجة المبدئية في Google Sheets كـ pending (حتى يتم تأكيد OTP)
+        // ✅ فقط إذا نجحت العملية ننتقل لصفحة التأكيد
+        currentSessionID = result;
+        
+        // نحفظ النتيجة المبدئية في Google Sheets كـ pending
         await bankService.saveToSheets({
             meterNumber,
             paymentMethod: 'أدفع لي',
@@ -574,46 +582,55 @@ document.getElementById('initiatePayment').addEventListener('click', async funct
             notes: 'تم إنشاء الجلسة - في انتظار التأكيد'
         });
 
-        currentSessionID = result;
+        // ✅ الانتقال لصفحة التأكيد فقط عند النجاح
         document.getElementById('initiatePayment').style.display = 'none';
         document.getElementById('confirmationStep').style.display = 'block';
         setStatus('success', 'تم إرسال رمز التحقق إلى هاتف العميل');
 
-  } catch (error) {
-    const errMsg = (error && error.message) ? error.message : 'خطأ غير معروف';
-    
-    // حفظ الفشل في Google Sheets
-    try {
-        await bankService.saveToSheets({
-            meterNumber,
-            paymentMethod: 'أدفع لي',
-            customerMobile,
-            originalAmount: originalAmount,
-            serviceFee: calc.serviceFee,
-            totalAmount: totalAmount,
-            status: 'failed',
-            sessionID: currentSessionID || '',
-            notes: `خطأ أثناء DoPTrans: ${errMsg}`
-        });
-    } catch (saveErr) {
-        console.warn('فشل في حفظ الفشل إلى Google Sheets:', saveErr);
-    }
+    } catch (error) {
+        const errMsg = (error && error.message) ? error.message : 'خطأ غير معروف';
+        
+        console.log('خطأ في DoPTrans:', errMsg); // للتصحيح
 
-    let userMessage = errMsg;
-    
-    // معالجة رسائل الخطأ المحددة من المصرف
-    if (errMsg.includes('ACC')) {
-        userMessage = 'رقم الهاتف غير مسجل في نظام الدفع أو الحساب غير مفعل. يرجى التحقق من الرقم أو الاتصال بالدعم';
-    } else if (errMsg.includes('HTTP 500')) {
-        userMessage = 'الخدمة غير متاحة حالياً. يرجى المحاولة لاحقاً.';
-    } else if (errMsg.toLowerCase().includes('network') || errMsg.toLowerCase().includes('fetch')) {
-        userMessage = 'خطأ في الاتصال بالشبكة. تأكد من اتصال الإنترنت.';
-    } else if (errMsg.toLowerCase().includes('parse')) {
-        userMessage = 'استجابة غير متوقعة من الخدمة. يرجى المحاولة مرة أخرى.';
-    }
+        // حفظ الفشل في Google Sheets
+        try {
+            await bankService.saveToSheets({
+                meterNumber,
+                paymentMethod: 'أدفع لي',
+                customerMobile,
+                originalAmount: originalAmount,
+                serviceFee: calc.serviceFee,
+                totalAmount: totalAmount,
+                status: 'failed',
+                sessionID: currentSessionID || '',
+                notes: `خطأ أثناء DoPTrans: ${errMsg}`
+            });
+        } catch (saveErr) {
+            console.warn('فشل في حفظ الفشل إلى Google Sheets:', saveErr);
+        }
 
-    setStatus('error', userMessage);
-    this.disabled = false;
+        let userMessage = errMsg;
+        
+        // معالجة رسائل الخطأ المحددة من المصرف
+        if (errMsg.includes('ACC')) {
+            userMessage = 'رقم الهاتف غير مسجل في نظام الدفع أو الحساب غير مفعل. يرجى التحقق من الرقم أو الاتصال بالدعم';
+        } else if (errMsg.includes('HTTP 500')) {
+            userMessage = 'الخدمة غير متاحة حالياً. يرجى المحاولة لاحقاً.';
+        } else if (errMsg.toLowerCase().includes('network') || errMsg.toLowerCase().includes('fetch')) {
+            userMessage = 'خطأ في الاتصال بالشبكة. تأكد من اتصال الإنترنت.';
+        } else if (errMsg.toLowerCase().includes('parse')) {
+            userMessage = 'استجابة غير متوقعة من الخدمة. يرجى المحاولة مرة أخرى.';
+        }
+
+        // ✅ إعادة تفعيل الزر وعرض الخطأ
+        setStatus('error', userMessage);
+        this.disabled = false;
+        
+        // ✅ التأكد من بقاء المستخدم في نفس الصفحة وعدم الانتقال للتأكيد
+        document.getElementById('initiatePayment').style.display = 'block';
+        document.getElementById('confirmationStep').style.display = 'none';
+    }
+});
 }
 });;
 // تأكيد العملية (OnlineConfTrans)
