@@ -715,14 +715,22 @@ document.getElementById('confirmTransaction').addEventListener('click', async fu
         } catch (saveErr) {
             console.warn('فشل في حفظ الفشل إلى Google Sheets:', saveErr);
         }
-
-        let userMessage = errMsg;
-        if (errMsg.includes('HTTP 500')) userMessage = 'الخدمة غير متاحة حالياً. يرجى المحاولة لاحقاً.';
-        else if (errMsg.toLowerCase().includes('network') || errMsg.toLowerCase().includes('fetch')) userMessage = 'خطأ في الاتصال بالشبكة. تأكد من اتصال الإنترنت.';
-
-        setStatus('error', userMessage);
-        this.disabled = false;
+ let userMessage = errMsg;
+    
+    // معالجة رسائل الخطأ المحددة من المصرف
+    if (errMsg.includes('ACC')) {
+        userMessage = 'رقم الهاتف غير مسجل في نظام الدفع أو الحساب غير مفعل. يرجى التحقق من الرقم أو الاتصال بالدعم';
+    } else if (errMsg.includes('HTTP 500')) {
+        userMessage = 'الخدمة غير متاحة حالياً. يرجى المحاولة لاحقاً.';
+    } else if (errMsg.toLowerCase().includes('network') || errMsg.toLowerCase().includes('fetch')) {
+        userMessage = 'خطأ في الاتصال بالشبكة. تأكد من اتصال الإنترنت.';
+    } else if (errMsg.toLowerCase().includes('parse')) {
+        userMessage = 'استجابة غير متوقعة من الخدمة. يرجى المحاولة مرة أخرى.';
     }
+    
+    setStatus('error', userMessage);
+    this.disabled = false;
+}
 });
 
         // إرسال موبي كاش -> فتح واتساب + حفظ في Google Sheets
