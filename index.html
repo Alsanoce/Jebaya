@@ -897,6 +897,53 @@
         }
 
     });
+     // ======================
+// التعامل مع اختيار وسيلة الدفع
+// ======================
+const paymentOptions = document.querySelectorAll('.payment-option');
+
+paymentOptions.forEach(option => {
+    option.addEventListener('click', () => {
+        // إزالة التحديد من الكل
+        paymentOptions.forEach(o => o.classList.remove('active'));
+
+        // تفعيل الخيار الحالي
+        option.classList.add('active');
+        selectedMethod = option.dataset.method;
+
+        // تفعيل زر "استمرار"
+        continueButton.disabled = false;
+    });
+});
+
+// ======================
+// عند الضغط على استمرار
+// ======================
+continueButton.addEventListener('click', () => {
+    if (!selectedMethod) return;
+
+    mainMenu.classList.add('hidden');
+    backButton.classList.remove('hidden');
+
+    if (selectedMethod === 'adfa3ly') {
+        adfa3lyForm.classList.remove('hidden');
+    } else if (selectedMethod === 'mobicash') {
+        mobicashForm.classList.remove('hidden');
+    }
+});
+
+// ======================
+// زر الرجوع
+// ======================
+backButton.addEventListener('click', () => {
+    // إرجاع المستخدم للصفحة الرئيسية
+    adfa3lyForm.classList.add('hidden');
+    mobicashForm.classList.add('hidden');
+    confirmationPage.classList.add('hidden');
+    successPage.classList.add('hidden');
+    mainMenu.classList.remove('hidden');
+    backButton.classList.add('hidden');
+});   
     </script>
 </body>
 </html>
