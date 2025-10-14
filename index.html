@@ -137,13 +137,17 @@
 
             <div class="payment-options">
                 <div class="payment-option" data-method="adfa3ly">
-                    <div class="payment-icon"><i class="fas fa-mobile-alt" style="font-size:40px; color:#00a2ff;"></i></div>
+                    <div class="payment-icon">
+                        <img src="https://raw.githubusercontent.com/Alsanoce/Jebaya/refs/heads/main/images/adfa3ly.png" alt="أدفع لي">
+                    </div>
                     <h3>أدفع لي</h3>
                     <p>الدفع عبر رقم الهاتف</p>
                 </div>
 
                 <div class="payment-option" data-method="mobicash">
-                    <div class="payment-icon"><i class="fas fa-credit-card" style="font-size:40px; color:#6e3cba;"></i></div>
+                    <div class="payment-icon">
+                        <img src="https://raw.githubusercontent.com/Alsanoce/Jebaya/refs/heads/main/images/mobicash.png" alt="موبي كاش">
+                    </div>
                     <h3>موبي كاش</h3>
                     <p>الدفع عبر البطاقة</p>
                 </div>
@@ -529,6 +533,7 @@
         }
 
         // اختيار طريقة الدفع
+        const paymentOptions = document.querySelectorAll('.payment-option');
         paymentOptions.forEach(option => {
             option.addEventListener('click', function() {
                 paymentOptions.forEach(op => op.classList.remove('active'));
@@ -908,53 +913,6 @@
         }
 
     });
-     // ======================
-// التعامل مع اختيار وسيلة الدفع
-// ======================
-const paymentOptions = document.querySelectorAll('.payment-option');
-
-paymentOptions.forEach(option => {
-    option.addEventListener('click', () => {
-        // إزالة التحديد من الكل
-        paymentOptions.forEach(o => o.classList.remove('active'));
-
-        // تفعيل الخيار الحالي
-        option.classList.add('active');
-        selectedMethod = option.dataset.method;
-
-        // تفعيل زر "استمرار"
-        continueButton.disabled = false;
-    });
-});
-
-// ======================
-// عند الضغط على استمرار
-// ======================
-continueButton.addEventListener('click', () => {
-    if (!selectedMethod) return;
-
-    mainMenu.classList.add('hidden');
-    backButton.classList.remove('hidden');
-
-    if (selectedMethod === 'adfa3ly') {
-        adfa3lyForm.classList.remove('hidden');
-    } else if (selectedMethod === 'mobicash') {
-        mobicashForm.classList.remove('hidden');
-    }
-});
-
-// ======================
-// زر الرجوع
-// ======================
-backButton.addEventListener('click', () => {
-    // إرجاع المستخدم للصفحة الرئيسية
-    adfa3lyForm.classList.add('hidden');
-    mobicashForm.classList.add('hidden');
-    confirmationPage.classList.add('hidden');
-    successPage.classList.add('hidden');
-    mainMenu.classList.remove('hidden');
-    backButton.classList.add('hidden');
-});   
     </script>
 </body>
 </html>
