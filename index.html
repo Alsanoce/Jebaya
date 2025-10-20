@@ -227,21 +227,35 @@
         </div>
 
         <!-- موبي كاش -->
-        <div class="form-container hidden" id="mobicashForm">
-            <h2 style="text-align:center; margin-bottom:20px; color:var(--primary);">الدفع عبر موبي كاش</h2>
+       <div class="form-container hidden" id="mobicashForm">
+    <h2 style="text-align:center; margin-bottom:20px; color:var(--primary);">الدفع عبر موبي كاش</h2>
 
-            <div class="fee-notice"><i class="fas fa-info-circle"></i> <span>سيتم تحويلك إلى بوابة الدفع لإتمام العملية</span></div>
-            <div class="amount-notice"><i class="fas fa-exclamation-circle"></i> <span>أقل قيمة للتعبئة 30 دينار</span></div>
+    <div class="fee-notice"><i class="fas fa-info-circle"></i> <span>سيتم تحويلك إلى بوابة الدفع لإتمام العملية</span></div>
+    <div class="amount-notice"><i class="fas fa-exclamation-circle"></i> <span>أقل قيمة للتعبئة 30 دينار</span></div>
 
-            <div class="form-group">
-                <label for="cardNumber">رقم البطاقة</label>
-                <input type="text" id="cardNumber" placeholder="أدخل رقم البطاقة" required>
-            </div>
+    <!-- 🔹 رقم الهاتف -->
+    <div class="form-group">
+        <label for="mobicashMobile">رقم الهاتف</label>
+        <input type="text" id="mobicashMobile" placeholder="09xxxxxxxx" maxlength="10" inputmode="numeric" required>
+        <small style="color:var(--gray); font-size:12px;">أدخل رقم الهاتف المرتبط بحساب موبي كاش</small>
+    </div>
 
-            <div class="form-group">
-                <label for="amountMobicash">المبلغ (دينار)</label>
-                <input type="number" id="amountMobicash" placeholder="أدخل المبلغ (30 دينار كحد أدنى)" min="30" required>
-            </div>
+    <!-- 🔹 رقم البطاقة -->
+    <div class="form-group">
+        <label for="cardNumber">رقم البطاقة</label>
+        <input type="text" id="cardNumber" placeholder="أدخل رقم البطاقة" required>
+    </div>
+
+    <!-- 🔹 المبلغ -->
+    <div class="form-group">
+        <label for="amountMobicash">المبلغ (دينار)</label>
+        <input type="number" id="amountMobicash" placeholder="أدخل المبلغ (30 دينار كحد أدنى)" min="30" required>
+    </div>
+
+    <div class="review-box" id="reviewBoxMobicash" style="display:none;"></div>
+
+    <button class="btn" id="submitMobicash"><i class="fab fa-whatsapp"></i> إرسال عبر واتساب</button>
+</div>
 
             <div class="review-box" id="reviewBoxMobicash" style="display:none;"></div>
 
