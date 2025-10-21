@@ -227,37 +227,42 @@
         </div>
 
         <!-- موبي كاش -->
-       <div class="form-container hidden" id="mobicashForm">
-    <h2 style="text-align:center; margin-bottom:20px; color:var(--primary);">الدفع عبر موبي كاش</h2>
+        <div class="form-container hidden" id="mobicashForm">
+            <h2 style="text-align:center; margin-bottom:20px; color:var(--primary);">الدفع عبر موبي كاش</h2>
 
-    <div class="fee-notice"><i class="fas fa-info-circle"></i> <span>سيتم تحويلك إلى بوابة الدفع لإتمام العملية</span></div>
-    <div class="amount-notice"><i class="fas fa-exclamation-circle"></i> <span>أقل قيمة للتعبئة 30 دينار</span></div>
+            <div class="fee-notice"><i class="fas fa-info-circle"></i> <span>سيتم تحويلك إلى بوابة الدفع لإتمام العملية</span></div>
+            <div class="amount-notice"><i class="fas fa-exclamation-circle"></i> <span>أقل قيمة للتعبئة 30 دينار</span></div>
 
-    <!-- 🔹 رقم الهاتف -->
-    <div class="form-group">
-        <label for="mobicashMobile">رقم الهاتف</label>
-        <input type="text" id="mobicashMobile" placeholder="09xxxxxxxx" maxlength="10" inputmode="numeric" required>
-        <small style="color:var(--gray); font-size:12px;">أدخل رقم الهاتف المرتبط بحساب موبي كاش</small>
-    </div>
+            <!-- 🔹 رقم الهاتف -->
+            <div class="form-group">
+                <label for="mobicashMobile">رقم الهاتف</label>
+                <input type="text" id="mobicashMobile" placeholder="09xxxxxxxx" maxlength="10" inputmode="numeric" required>
+                <small style="color:var(--gray); font-size:12px;">أدخل رقم الهاتف المرتبط بحساب موبي كاش</small>
+            </div>
 
-    <!-- 🔹 رقم البطاقة -->
-    <div class="form-group">
-        <label for="cardNumber">رقم البطاقة</label>
-        <input type="text" id="cardNumber" placeholder="أدخل رقم البطاقة" required>
-    </div>
+            <!-- 🔹 رقم البطاقة -->
+            <div class="form-group">
+                <label for="cardNumber">رقم البطاقة</label>
+                <input type="text" id="cardNumber" placeholder="أدخل رقم البطاقة" required>
+            </div>
 
-    <!-- 🔹 المبلغ -->
-    <div class="form-group">
-        <label for="amountMobicash">المبلغ (دينار)</label>
-        <input type="number" id="amountMobicash" placeholder="أدخل المبلغ (30 دينار كحد أدنى)" min="30" required>
-    </div>
+            <!-- 🔹 المبلغ -->
+            <div class="form-group">
+                <label for="amountMobicash">المبلغ (دينار)</label>
+                <input type="number" id="amountMobicash" placeholder="أدخل المبلغ (30 دينار كحد أدنى)" min="30" required>
+                <div class="amount-details hidden" id="amountDetailsMobicash">
+                    <div class="amount-breakdown"><span>المبلغ المدخل:</span><span id="enteredAmountMobicash">0</span> دينار</div>
+                    <div class="amount-breakdown"><span>قيمة الخدمة (<span id="feePercentageMobicash">0</span>%):</span><span id="serviceFeeMobicash">0</span> دينار</div>
+                    <div class="amount-breakdown final-amount"><span>المبلغ الفعلي:</span><span id="finalAmountMobicash">0</span> دينار</div>
+                </div>
+            </div>
 
-    <div class="review-box" id="reviewBoxMobicash" style="display:none;"></div>
+            <div class="review-box" id="reviewBoxMobicash" style="display:none;"></div>
 
-    <button class="btn" id="submitMobicash"><i class="fab fa-whatsapp"></i> إرسال عبر واتساب</button>
-</div>
+            <div class="transaction-status" id="mobicashStatus"></div>
 
-         
+            <button class="btn" id="submitMobicash"><i class="fab fa-whatsapp"></i> إرسال الطلب عبر واتساب</button>
+        </div>
     </div>
 
     <footer>
@@ -493,9 +498,30 @@
             box.classList.remove('hidden');
         }
 
+        function showReviewMobicash(mobile, cardNumber, amount) {
+            const box = document.getElementById('reviewBoxMobicash');
+            const calc = calculateServiceFee(amount);
+            box.innerHTML = `
+                <b>ملخص الدفع:</b><br>
+                • رقم العداد: ${document.getElementById('meterNumber').value}<br>
+                • رقم الهاتف: ${mobile}<br>
+                • رقم البطاقة: ${cardNumber ? '••••' + cardNumber.slice(-4) : 'لم يُدخل'}<br>
+                • المبلغ: ${amount} د.ل<br>
+                • رسوم الخدمة: ${calc.serviceFee} د.ل (${calc.feePercentage}%)<br>
+                • إجمالي الدفع: ${calc.finalAmount} د.ل
+            `;
+            box.style.display = 'block';
+        }
+
         function hideReviewAdfa3ly() {
             const box = document.getElementById('reviewBoxAdfa3ly');
             box.classList.add('hidden');
+            box.innerHTML = '';
+        }
+
+        function hideReviewMobicash() {
+            const box = document.getElementById('reviewBoxMobicash');
+            box.style.display = 'none';
             box.innerHTML = '';
         }
 
@@ -571,6 +597,7 @@
             showPage(mainMenu);
             resetTransactionUI();
             hideReviewAdfa3ly();
+            hideReviewMobicash();
         });
 
         // تحديث الملخص عند تغيير المبلغ في أدفع لي
@@ -600,6 +627,39 @@
                 showReviewAdfa3ly(formattedMobile, amount);
             }
         });
+
+        // تحديث الملخص عند تغيير المبلغ في موبي كاش
+        document.getElementById('amountMobicash').addEventListener('input', function() {
+            const amount = parseFloat(this.value) || 0;
+            if (amount >= 30) {
+                document.getElementById('enteredAmountMobicash').textContent = amount;
+                const calc = calculateServiceFee(amount);
+                document.getElementById('feePercentageMobicash').textContent = calc.feePercentage;
+                document.getElementById('serviceFeeMobicash').textContent = calc.serviceFee;
+                document.getElementById('finalAmountMobicash').textContent = calc.finalAmount;
+                document.getElementById('amountDetailsMobicash').classList.remove('hidden');
+
+                const mobicashMobile = document.getElementById('mobicashMobile').value;
+                const cardNumber = document.getElementById('cardNumber').value;
+                showReviewMobicash(mobicashMobile, cardNumber, amount);
+            } else {
+                document.getElementById('amountDetailsMobicash').classList.add('hidden');
+                hideReviewMobicash();
+            }
+        });
+
+        // تحديث الملخص عند تغيير رقم الهاتف أو البطاقة في موبي كاش
+        document.getElementById('mobicashMobile').addEventListener('input', updateMobicashReview);
+        document.getElementById('cardNumber').addEventListener('input', updateMobicashReview);
+
+        function updateMobicashReview() {
+            const amount = parseFloat(document.getElementById('amountMobicash').value) || 0;
+            if (amount >= 30) {
+                const mobicashMobile = document.getElementById('mobicashMobile').value;
+                const cardNumber = document.getElementById('cardNumber').value;
+                showReviewMobicash(mobicashMobile, cardNumber, amount);
+            }
+        }
 
         // بدء عملية الدفع لأدفع لي
         document.getElementById('initiatePayment').addEventListener('click', async function() {
@@ -865,23 +925,41 @@
         // إرسال موبي كاش -> فتح واتساب + حفظ في Google Sheets
         document.getElementById('submitMobicash').addEventListener('click', async function() {
             const meterNumber = document.getElementById('meterNumber').value;
+            const mobicashMobile = document.getElementById('mobicashMobile').value;
             const cardNumber = document.getElementById('cardNumber').value.trim();
             const amountInput = document.getElementById('amountMobicash').value;
-            const amount = parseFloat(amountInput);
+            const originalAmount = parseFloat(amountInput);
 
+            if (!mobicashMobile) { alert('يرجى إدخال رقم الهاتف'); return; }
             if (!cardNumber) { alert('يرجى إدخال رقم البطاقة'); return; }
-            if (!amount || amount < 30) { alert('يرجى إدخال مبلغ صحيح لا يقل عن 30 دينار'); return; }
+            if (!originalAmount || originalAmount < 30) { alert('يرجى إدخال مبلغ صحيح لا يقل عن 30 دينار'); return; }
 
-            // احسب الرسوم والملخص
-            const calc = calculateServiceFee(amount);
+            // احسب الرسوم والملخص - نفس أدفع لي
+            const calc = calculateServiceFee(originalAmount);
+            const totalAmount = calc.finalAmount;
 
-            // حفظ الطلب في Google Sheets (status: pending)
+            // حفظ بيانات المعاملة
+            currentTransactionData = {
+                meterNumber,
+                customerMobile: mobicashMobile,
+                cardNumber,
+                originalAmount,
+                serviceFee: calc.serviceFee,
+                totalAmount,
+                feePercentage: calc.feePercentage,
+                paymentMethod: 'موبي كاش'
+            };
+
+            // حفظ الطلب في Google Sheets
             try {
                 await bankService.saveToSheets({
                     meterNumber,
-                    paymentMethod: 'Mobicash',
+                    paymentMethod: 'موبي كاش',
+                    customerMobile: mobicashMobile,
                     cardNumber,
-                    amount,
+                    originalAmount: originalAmount,
+                    serviceFee: calc.serviceFee,
+                    totalAmount: totalAmount,
                     status: 'pending',
                     sessionID: '',
                     notes: 'تم إرسال طلب موبي كاش - انتظار معالجة يدوية'
@@ -890,24 +968,54 @@
                 console.warn('فشل في حفظ موبي كاش إلى Google Sheets:', err);
             }
 
-            // إعداد رسالة واتساب
-            const whatsappMessage = `طلب شحن رصيد كهربائي%0A%0A📋 تفاصيل الطلب:%0A───────────────%0A• رقم العداد: ${meterNumber}%0A• طريقة الدفع: موبي كاش%0A• رقم البطاقة: ${cardNumber}%0A• المبلغ المطلوب: ${amount} دينار%0A• قيمة الخدمة: ${calc.serviceFee} دينار (${calc.feePercentage}%)%0A• المبلغ الإجمالي: ${calc.finalAmount} دينار%0A%0A⏰ ${new Date().toLocaleString('ar-LY')}`;
+            // إعداد رسالة واتساب مفصلة - نفس أدفع لي
+            const whatsappMessage = `طلب شحن رصيد كهربائي (موبي كاش)
+
+📋 تفاصيل الطلب:
+───────────────
+• رقم العداد: ${meterNumber}
+• طريقة الدفع: موبي كاش
+• رقم الهاتف: ${mobicashMobile}
+• رقم البطاقة: ${cardNumber}
+• المبلغ المطلوب: ${originalAmount} د.ل
+• قيمة الخدمة: ${calc.serviceFee} د.ل (${calc.feePercentage}%)
+• المبلغ الإجمالي: ${calc.finalAmount} د.ل
+• الحالة: في انتظار المعالجة
+⏰ ${new Date().toLocaleString('ar-LY')}
+
+📍 يرجى معالجة هذا الطلب يدوياً عبر نظام موبي كاش`;
 
             // فتح واتساب للدعم
-            window.open(`https://api.whatsapp.com/send?phone=${SUPPORT_PHONE_PLAIN}&text=${whatsappMessage}`, '_blank');
+            window.open(`https://api.whatsapp.com/send?phone=${SUPPORT_PHONE_PLAIN}&text=${encodeURIComponent(whatsappMessage)}`, '_blank');
 
             // حفظ محليًا
-            saveLastTransactionLocal({ type: 'mobicash', meterNumber, cardNumber, amount, status: 'pending', ts: new Date().toISOString() });
+            saveLastTransactionLocal({ 
+                type: 'mobicash', 
+                ...currentTransactionData,
+                status: 'pending', 
+                ts: new Date().toISOString() 
+            });
 
-            // إظهار إشعار نجاح مؤقت
-            setStatus('success', 'تم إرسال الطلب إلى واتساب وحفظه في Google Sheets (معلق).');
-            setTimeout(() => { clearStatus(); }, 2500);
+            // إظهار إشعار نجاح مع التفاصيل
+            const statusMsg = `✅ تم إرسال الطلب إلى واتساب
+• المبلغ: ${originalAmount} د.ل
+• الرسوم: ${calc.serviceFee} د.ل
+• الإجمالي: ${calc.finalAmount} د.ل`;
+            
+            setStatus('success', statusMsg, 'mobicashStatus');
+            setTimeout(() => { 
+                clearStatus('mobicashStatus');
+                // العودة للصفحة الرئيسية بعد النجاح
+                showPage(mainMenu);
+                resetForm();
+            }, 4000);
         });
 
         // دوال مساعدة لإعادة تعيين
         function resetTransactionUI() {
             clearStatus();
             clearStatus('confirmationStatus');
+            clearStatus('mobicashStatus');
             document.getElementById('confirmationPin').value = '';
             currentSessionID = null;
             currentTransactionData = null;
@@ -917,9 +1025,12 @@
             document.getElementById('customerMobile').value = '';
             document.getElementById('amountAdfa3ly').value = '';
             document.getElementById('amountDetailsAdfa3ly').classList.add('hidden');
+            document.getElementById('mobicashMobile').value = '';
             document.getElementById('cardNumber').value = '';
             document.getElementById('amountMobicash').value = '';
+            document.getElementById('amountDetailsMobicash').classList.add('hidden');
             hideReviewAdfa3ly();
+            hideReviewMobicash();
             resetTransactionUI();
         }
 
