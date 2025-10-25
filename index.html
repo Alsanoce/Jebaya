@@ -10,6 +10,7 @@
         :root{
             --primary:#0066cc; --primary-dark:#004d99; --secondary:#ff6b00;
             --light:#f8f9fa; --dark:#333; --gray:#6c757d; --success:#28a745; --danger:#dc3545;
+            --whatsapp: #25D366;
         }
         body{
             background: linear-gradient(135deg,#e6f2ff 0%,#cce5ff 100%);
@@ -51,6 +52,8 @@
         .btn i{ margin-left:8px; }
         .btn:hover{ background: linear-gradient(135deg,var(--primary-dark) 0%,#003366 100%); transform:translateY(-2px); box-shadow:0 5px 15px rgba(0,0,0,0.2); }
         .btn:disabled{ background:#ccc; cursor:not-allowed; transform:none; box-shadow:none; }
+        .btn-whatsapp{ background: linear-gradient(135deg, var(--whatsapp) 0%, #128C7E 100%); }
+        .btn-whatsapp:hover{ background: linear-gradient(135deg, #128C7E 0%, #075E54 100%); }
         .back-button{ position:absolute; top:20px; right:20px; background:rgba(255,255,255,0.2); width:40px; height:40px; border-radius:50%; display:flex; justify-content:center; align-items:center; cursor:pointer; }
         .hidden{ display:none; }
         footer{ text-align:center; padding:15px; color:var(--gray); font-size:14px; margin-top:auto; display:flex; flex-direction:column; align-items:center; gap:6px; }
@@ -74,6 +77,10 @@
         .success-page{ padding:30px 20px; text-align:center; }
         .success-icon{ width:80px; height:80px; background:var(--success); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px; }
         .success-icon i{ font-size:40px; color:white; }
+        .whatsapp-success-icon{ width:80px; height:80px; background:var(--whatsapp); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px; }
+        .whatsapp-success-icon i{ font-size:40px; color:white; }
+        .success-message{ margin:20px 0; }
+        .whatsapp-button-container{ margin-top: 30px; }
         @media (max-width:480px){
             .app-container{ border-radius:15px; }
             header{ padding:20px 15px; }
@@ -208,22 +215,24 @@
 
         <!-- صفحة النجاح -->
         <div class="success-page hidden" id="successPage">
-            <div class="success-icon">
-                <i class="fas fa-check"></i>
+            <div class="whatsapp-success-icon">
+                <i class="fab fa-whatsapp"></i>
             </div>
             
-            <h2 style="color:var(--success); margin-bottom:15px;">تمت العملية بنجاح!</h2>
-            <p style="margin-bottom:20px; color:var(--gray);">تم شحن الرصيد الكهربائي بنجاح وسيتم إرسال التفاصيل إلى واتساب</p>
+            <h2 style="color:var(--whatsapp); margin-bottom:15px;">تمت العملية بنجاح!</h2>
+            
+            <div class="success-message">
+                <p style="margin-bottom:20px; color:var(--gray);">تم شحن الرصيد الكهربائي بنجاح</p>
+                <p style="margin-bottom:20px; color:var(--gray);">انقر على الزر أدناه لاستلام التفاصيل على واتساب</p>
+            </div>
 
             <div class="review-box" id="successDetails" style="margin:20px 0;"></div>
 
-            <button class="btn" id="whatsappButton" style="background:var(--success);">
-                <i class="fab fa-whatsapp"></i> استلام التفاصيل على واتساب
-            </button>
-            
-            <button class="btn" id="newTransaction" style="background:var(--primary); margin-top:10px;">
-                <i class="fas fa-redo"></i> عملية جديدة
-            </button>
+            <div class="whatsapp-button-container">
+                <button class="btn btn-whatsapp" id="whatsappButton">
+                    <i class="fab fa-whatsapp"></i> استلام التفاصيل على واتساب
+                </button>
+            </div>
         </div>
 
         <!-- موبي كاش -->
@@ -914,12 +923,6 @@
             );
 
             window.open(`https://api.whatsapp.com/send?phone=${SUPPORT_PHONE_PLAIN}&text=${whatsappText}`, '_blank');
-        });
-
-        // زر عملية جديدة
-        document.getElementById('newTransaction').addEventListener('click', function() {
-            resetForm();
-            showPage(mainMenu);
         });
 
         // إرسال موبي كاش -> فتح واتساب + حفظ في Google Sheets
