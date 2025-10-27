@@ -681,7 +681,7 @@
             }
         }
 
-        // بدء عملية الدفع لأدفع لي
+        // بدء عملية الدفع لأدفع لي - تم التصحيح هنا
         document.getElementById('initiatePayment').addEventListener('click', async function() {
             const meterNumber = document.getElementById('meterNumber').value;
             const customerMobileRaw = document.getElementById('customerMobile').value;
@@ -723,29 +723,34 @@
 
             try {
                 // استدعاء DoPTrans باستخدام JSONP
+                console.log('جاري استدعاء DoPTrans:', { customerMobile, totalAmount });
                 const result = await bankService.doPTrans(customerMobile, totalAmount);
                 
                 console.log('نتيجة DoPTrans:', result);
                 
-                // التحقق الدقيق من نتيجة المصرف
+                // ✅ التصحيح: معالجة أفضل للاستجابات المختلفة
                 if (!result) {
                     throw new Error('لا توجد استجابة من المصرف');
                 }
                 
-                // إذا كانت النتيجة تحتوي على أخطاء معروفة
-                if (result.includes('ACC') || result.includes('Error') || result.includes('Fail') || 
-                    result.includes('Invalid') || result.includes('Not') || result.includes('Wrong')) {
+                // ✅ التصحيح: معالجة رسائل الخطأ المختلفة
+                const errorKeywords = ['ACC', 'Error', 'Fail', 'Invalid', 'Not', 'Wrong', 'PIN', 'pin', 'غير صحيح', 'خطأ'];
+                const hasError = errorKeywords.some(keyword => 
+                    result.toString().toLowerCase().includes(keyword.toLowerCase())
+                );
+                
+                if (hasError) {
                     throw new Error(result);
                 }
                 
-                // التحقق من وجود SessionID (علامة النجاح)
+                // ✅ التصحيح: تحقق من SessionID بطرق مختلفة
                 const hasSessionID = result.includes('SessionID') || /^\d+$/.test(result) || result.length > 5;
                 
                 if (!hasSessionID) {
-                    throw new Error(result || 'فشل في إنشاء الجلسة');
+                    throw new Error(result || 'فشل في إنشاء الجلسة - استجابة غير متوقعة');
                 }
 
-                // فقط إذا نجحت العملية ننتقل لصفحة التأكيد
+                // ✅ إذا نجحت العملية ننتقل لصفحة التأكيد
                 currentSessionID = result;
                 
                 // نحفظ النتيجة المبدئية في Google Sheets كـ pending
@@ -764,6 +769,7 @@
                 // الانتقال لصفحة التأكيد
                 showPage(confirmationPage);
                 clearStatus();
+                this.disabled = false;
 
             } catch (error) {
                 const errMsg = (error && error.message) ? error.message : 'خطأ غير معروف';
@@ -787,21 +793,25 @@
                     console.warn('فشل في حفظ الفشل إلى Google Sheets:', saveErr);
                 }
 
-                let userMessage = errMsg;
+                let userMessage = 'حدث خطأ أثناء المعالجة';
                 
-                // معالجة رسائل الخطأ المحددة من المصرف
+                // ✅ التصحيح: معالجة رسائل الخطأ المحددة من المصرف
                 if (errMsg.includes('ACC')) {
                     userMessage = 'رقم الهاتف غير مسجل في نظام الدفع أو الحساب غير مفعل. يرجى التحقق من الرقم أو الاتصال بالدعم';
                 } else if (errMsg.includes('PW') || errMsg.includes('Password')) {
                     userMessage = 'خطأ في كلمة المرور أو بيانات الدخول';
                 } else if (errMsg.includes('Balance') || errMsg.includes('Fund')) {
                     userMessage = 'رصيد غير كافي في حساب الدفع';
+                } else if (errMsg.includes('PIN') || errMsg.includes('pin') || errMsg.includes('غير صحيح')) {
+                    userMessage = 'رمز التحقق غير صحيح. يرجى التحقق من الرمز والمحاولة مرة أخرى';
                 } else if (errMsg.includes('HTTP 500')) {
                     userMessage = 'الخدمة غير متاحة حالياً. يرجى المحاولة لاحقاً.';
                 } else if (errMsg.toLowerCase().includes('network') || errMsg.toLowerCase().includes('fetch')) {
                     userMessage = 'خطأ في الاتصال بالشبكة. تأكد من اتصال الإنترنت.';
                 } else if (errMsg.toLowerCase().includes('parse')) {
                     userMessage = 'استجابة غير متوقعة من الخدمة. يرجى المحاولة مرة أخرى.';
+                } else if (errMsg.includes('استجابة غير متوقعة')) {
+                    userMessage = 'تعذر الاتصال بخادم الدفع. يرجى المحاولة لاحقاً أو استخدام طريقة دفع أخرى.';
                 }
 
                 // إعادة تفعيل الزر وعرض الخطأ
@@ -810,7 +820,7 @@
             }
         });
 
-        // تأكيد العملية (OnlineConfTrans)
+        // تأكيد العملية (OnlineConfTrans) - تم التصحيح هنا
         document.getElementById('confirmTransaction').addEventListener('click', async function() {
             const confirmationPin = document.getElementById('confirmationPin').value;
 
@@ -819,14 +829,27 @@
                 return; 
             }
 
+            if (!/^\d{4}$/.test(confirmationPin)) {
+                alert('يجب أن يتكون رمز التحقق من أرقام فقط');
+                return;
+            }
+
             setStatus('processing', 'جاري تأكيد العملية...', 'confirmationStatus');
             this.disabled = true;
 
             try {
+                console.log('جاري تأكيد العملية:', { sessionID: currentSessionID, pin: confirmationPin });
                 const result = await bankService.onlineConfTrans(currentSessionID, confirmationPin);
 
-                // إذا كانت النتيجة OK -> عملية ناجحة
-                if (result === 'OK' || result === 'Success' || result === 'OKAY') {
+                console.log('نتيجة التأكيد:', result);
+
+                // ✅ التصحيح: معالجة أفضل للاستجابات
+                const successKeywords = ['OK', 'Success', 'OKAY', 'تم', 'نجح'];
+                const isSuccess = successKeywords.some(keyword => 
+                    result.toString().toLowerCase().includes(keyword.toLowerCase())
+                );
+
+                if (isSuccess) {
                     
                     // حفظ نجاح العملية في Google Sheets
                     await bankService.saveToSheets({
@@ -882,12 +905,19 @@
                         notes: note
                     });
 
-                    setStatus('error', `تأكد من رقم التحقق ${result}`, 'confirmationStatus');
+                    let errorMsg = `فشل في التأكيد: ${result}`;
+                    if (result.includes('PIN') || result.includes('pin')) {
+                        errorMsg = 'رمز التحقق غير صحيح. يرجى التحقق والمحاولة مرة أخرى';
+                    }
+
+                    setStatus('error', errorMsg, 'confirmationStatus');
                     this.disabled = false;
                 }
 
             } catch (error) {
                 const errMsg = (error && error.message) ? error.message : 'خطأ غير معروف أثناء التأكيد';
+                console.log('خطأ في التأكيد:', errMsg);
+                
                 try {
                     await bankService.saveToSheets({
                         meterNumber: currentTransactionData.meterNumber,
@@ -904,11 +934,13 @@
                     console.warn('فشل في حفظ الفشل إلى Google Sheets:', saveErr);
                 }
 
-                let userMessage = errMsg;
+                let userMessage = 'حدث خطأ أثناء التأكيد';
                 
                 // معالجة رسائل الخطأ المحددة من المصرف
                 if (errMsg.includes('ACC')) {
-                    userMessage = 'رقم الهاتف غير مسجل في نظام الدفع أو الحساب غير مفعل. يرجى التحقق من الرقم أو الاتصال بالدعم';
+                    userMessage = 'رقم الهاتف غير مسجل في نظام الدفع أو الحساب غير مفعل';
+                } else if (errMsg.includes('PIN') || errMsg.includes('pin')) {
+                    userMessage = 'رمز التحقق غير صحيح. يرجى التحقق من الرمز والمحاولة مرة أخرى';
                 } else if (errMsg.includes('HTTP 500')) {
                     userMessage = 'الخدمة غير متاحة حالياً. يرجى المحاولة لاحقاً.';
                 } else if (errMsg.toLowerCase().includes('network') || errMsg.toLowerCase().includes('fetch')) {
