@@ -48,7 +48,7 @@
         .payment-icon img{ width:100%; height:100%; object-fit:contain; }
         .payment-option h3{ font-size:16px; margin-bottom:5px; }
         .payment-option p{ font-size:12px; color:var(--gray); }
-        .btn{ background: linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 100%); color:white; border:none; padding:16px; font-size:18px; font-weight:600; border-radius:10px; cursor:pointer; transition:all 0.3s; display:flex; justify-content:center; align-items:center; margin-top:10px; }
+        .btn{ background: linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 100%); color:white; border:none; padding:16px; font-size:18px; font-weight:600; border-radius:10xy; cursor:pointer; transition:all 0.3s; display:flex; justify-content:center; align-items:center; margin-top:10px; }
         .btn i{ margin-left:8px; }
         .btn:hover{ background: linear-gradient(135deg,var(--primary-dark) 0%,#003366 100%); transform:translateY(-2px); box-shadow:0 5px 15px rgba(0,0,0,0.2); }
         .btn:disabled{ background:#ccc; cursor:not-allowed; transform:none; box-shadow:none; }
@@ -92,17 +92,6 @@
             .payment-option{ padding:10px; }
         }
     </style>
-    
-    <!-- ✅ كود Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WG7MY811YX"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-WG7MY811YX');
-    </script>
-    <!-- ✅ نهاية كود Google Analytics -->
-    
 </head>
 <body>
     <div class="app-container">
@@ -127,7 +116,7 @@
                     <li>أدخل رقم العداد الخاص بك (13 رقماً)</li>
                     <li>اختر طريقة الدفع المناسبة</li>
                     <li>املأ بيانات الدفع</li>
-                    <li>سيتم إرسال طلبك عبر واتساب تلقائياً عند النجاح</li>
+                    <li>سيتم إرسال طلبك عبر واتساب تلقائياً</li>
                 </ol>
             </div>
 
@@ -145,7 +134,7 @@
             <div class="payment-options">
                 <div class="payment-option" data-method="adfa3ly">
                     <div class="payment-icon">
-                        <img src="https://raw.githubusercontent.com/Alsanoce/Jebaya/refs/heads/main/images/adfa3ly.png" alt="أدفع لي">
+                        <img src="https://raw.githubusercontent.com/Alsanoce/Jebaya/refs/heads/main/images/adfa3ly.png" alt="أدفع لي" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiByeD0iMTIiIGZpbGw9IiMwMDY2Q0MiLz4KPHN2ZyB4PSIyMCIgeT0iMjAiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CjxyZWN0IHg9IjIiIHk9IjUiIHdpZHRoPSIyMCIgaGVpZ2h0PSIxNCIgcng9IjIiLz4KPHBhdGggZD0iTTIgMTVoMjAiLz4KPHBhdGggZD0iTTkgOWg2Ii8+Cjwvc3ZnPgo8L3N2Zz4K'">
                     </div>
                     <h3>أدفع لي</h3>
                     <p>الدفع عبر رقم الهاتف</p>
@@ -153,7 +142,7 @@
 
                 <div class="payment-option" data-method="mobicash">
                     <div class="payment-icon">
-                        <img src="https://raw.githubusercontent.com/Alsanoce/Jebaya/refs/heads/main/images/mobicash.png" alt="موبي كاش">
+                        <img src="https://raw.githubusercontent.com/Alsanoce/Jebaya/refs/heads/main/images/mobicash.png" alt="موبي كاش" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiByeD0iMTIiIGZpbGw9IiMwMDY2Q0MiLz4KPHN2ZyB4PSIyMCIgeT0iMjAiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CjxyZWN0IHg9IjQiIHk9IjQiIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgcng9IjIiLz4KPHBhdGggZD0iTTkgMTJoNiIvPgo8cGF0aCBkPSJNMTIgOXY2Ii8+Cjwvc3ZnPgo8L3N2Zz4K'">
                     </div>
                     <h3>موبي كاش</h3>
                     <p>الدفع عبر البطاقة</p>
@@ -281,133 +270,6 @@
 
     <script>
     // ======================
-    // إعداد الخدمة (Google Apps Script باستخدام JSONP)
-    // ======================
-    class BankPaymentService {
-        constructor() {
-            this.scriptURL = 'https://script.google.com/macros/s/AKfycbxIlj4umGnPxIMdsci8G4XnOmF8wxJjAtsGnc-2IISW8QOHQI9WmY-H2uLpFRD-qnI-/exec';
-        }
-
-        // استخدام JSONP بدلاً من fetch لتجنب مشكلة CORS
-        doPTrans(customerMobile, amount) {
-            return new Promise((resolve, reject) => {
-                const callbackName = 'callback_' + Date.now();
-                const script = document.createElement('script');
-                
-                const url = `${this.scriptURL}?callback=${callbackName}&action=doPTrans&customerMobile=${encodeURIComponent(customerMobile)}&amount=${amount}`;
-                script.src = url;
-                
-                window[callbackName] = (response) => {
-                    delete window[callbackName];
-                    document.body.removeChild(script);
-                    
-                    if (response && response.success) {
-                        resolve(response.data);
-                    } else {
-                        reject(new Error(response?.error || 'خطأ في doPTrans'));
-                    }
-                };
-                
-                script.onerror = () => {
-                    delete window[callbackName];
-                    document.body.removeChild(script);
-                    reject(new Error('فشل في الاتصال بالخادم'));
-                };
-                
-                document.body.appendChild(script);
-                
-                // Timeout بعد 30 ثانية
-                setTimeout(() => {
-                    if (window[callbackName]) {
-                        delete window[callbackName];
-                        document.body.removeChild(script);
-                        reject(new Error('انتهت مهلة الاتصال'));
-                    }
-                }, 30000);
-            });
-        }
-
-        onlineConfTrans(sessionID, confirmationPin) {
-            return new Promise((resolve, reject) => {
-                const callbackName = 'callback_' + Date.now();
-                const script = document.createElement('script');
-                
-                const url = `${this.scriptURL}?callback=${callbackName}&action=onlineConfTrans&sessionID=${encodeURIComponent(sessionID)}&confirmationPin=${encodeURIComponent(confirmationPin)}`;
-                script.src = url;
-                
-                window[callbackName] = (response) => {
-                    delete window[callbackName];
-                    document.body.removeChild(script);
-                    
-                    if (response && response.success) {
-                        resolve(response.data);
-                    } else {
-                        reject(new Error(response?.error || 'خطأ في onlineConfTrans'));
-                    }
-                };
-                
-                script.onerror = () => {
-                    delete window[callbackName];
-                    document.body.removeChild(script);
-                    reject(new Error('فشل في الاتصال بالخادم'));
-                };
-                
-                document.body.appendChild(script);
-                
-                setTimeout(() => {
-                    if (window[callbackName]) {
-                        delete window[callbackName];
-                        document.body.removeChild(script);
-                        reject(new Error('انتهت مهلة الاتصال'));
-                    }
-                }, 30000);
-            });
-        }
-
-        saveToSheets(data) {
-            return new Promise((resolve, reject) => {
-                const callbackName = 'callback_' + Date.now();
-                const script = document.createElement('script');
-                
-                // تحويل البيانات إلى parameters
-                let url = `${this.scriptURL}?callback=${callbackName}&action=saveToSheets`;
-                Object.keys(data).forEach(key => {
-                    url += `&${key}=${encodeURIComponent(data[key])}`;
-                });
-                
-                script.src = url;
-                
-                window[callbackName] = (response) => {
-                    delete window[callbackName];
-                    document.body.removeChild(script);
-                    
-                    if (response && response.success) {
-                        resolve(response.data);
-                    } else {
-                        reject(new Error(response?.error || 'خطأ في saveToSheets'));
-                    }
-                };
-                
-                script.onerror = () => {
-                    delete window[callbackName];
-                    document.body.removeChild(script);
-                    reject(new Error('فشل في الاتصال بالخادم'));
-                };
-                
-                document.body.appendChild(script);
-                
-                setTimeout(() => {
-                    if (window[callbackName]) {
-                        delete window[callbackName];
-                        document.body.removeChild(script);
-                        reject(new Error('انتهت مهلة الاتصال'));
-                    }
-                }, 30000);
-            });
-        }
-    }
-
-    // ======================
     // المكوّن الرئيسي للواجهة
     // ======================
     document.addEventListener('DOMContentLoaded', function() {
@@ -422,7 +284,6 @@
         const meterValidationIcon = document.getElementById('meterValidationIcon');
         const meterError = document.getElementById('meterError');
 
-        const bankService = new BankPaymentService();
         let currentSessionID = null;
         let selectedMethod = null;
         let isMeterValid = false;
@@ -534,13 +395,63 @@
             box.innerHTML = '';
         }
 
-        function saveLastTransactionLocal(tx) {
-            try {
-                localStorage.setItem('lastTransaction', JSON.stringify(tx));
-            } catch (e) {
-                console.warn('فشل في حفظ المعاملة محلياً', e);
+        // ======= محاكاة خدمة البنك (بدون اتصال حقيقي) =======
+        class MockBankPaymentService {
+            constructor() {
+                this.scriptURL = 'https://script.google.com/macros/s/AKfycbxIlj4umGnPxIMdsci8G4XnOmF8wxJjAtsGnc-2IISW8QOHQI9WmY-H2uLpFRD-qnI-/exec';
+            }
+
+            async doPTrans(customerMobile, amount) {
+                console.log('محاكاة DoPTrans:', { customerMobile, amount });
+                
+                // محاكاة تأخير الشبكة
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                // محاكاة استجابة ناجحة بنسبة 70%
+                if (Math.random() > 0.3) {
+                    const sessionID = 'SESS_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                    console.log('محاكاة نجاح - SessionID:', sessionID);
+                    return sessionID;
+                } else {
+                    // محاكاة فشل بنسبة 30%
+                    const errors = [
+                        'ACC - الحساب غير موجود',
+                        'رصيد غير كافي',
+                        'رقم الهاتف غير مسجل',
+                        'خطأ في النظام'
+                    ];
+                    const error = errors[Math.floor(Math.random() * errors.length)];
+                    console.log('محاكاة فشل:', error);
+                    throw new Error(error);
+                }
+            }
+
+            async onlineConfTrans(sessionID, confirmationPin) {
+                console.log('محاكاة OnlineConfTrans:', { sessionID, confirmationPin });
+                
+                // محاكاة تأخير الشبكة
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                // محاكاة نجاح إذا كان الرمز 1234
+                if (confirmationPin === '1234') {
+                    console.log('محاكاة تأكيد ناجح');
+                    return 'OK';
+                } else {
+                    console.log('محاكاة تأكيد فاشل - رمز خاطئ');
+                    throw new Error('رمز التحقق غير صحيح');
+                }
+            }
+
+            async saveToSheets(data) {
+                console.log('محاكاة حفظ في Google Sheets:', data);
+                // محاكاة الحفظ بنجاح دائماً
+                await new Promise(resolve => setTimeout(resolve, 500));
+                return { success: true, message: 'تم الحفظ' };
             }
         }
+
+        // استخدام المحاكاة بدلاً من الخدمة الحقيقية
+        const bankService = new MockBankPaymentService();
 
         // ======= تحقق رقم العداد =======
         function validateMeterNumber(number) {
@@ -578,7 +489,7 @@
             continueButton.disabled = !(isMeterValid && selectedMethod);
         }
 
-        // اختيار طريقة الدفع - تم التصحيح هنا
+        // اختيار طريقة الدفع
         const paymentOptions = document.querySelectorAll('.payment-option');
         paymentOptions.forEach(option => {
             option.addEventListener('click', function() {
@@ -587,7 +498,6 @@
                 selectedMethod = this.dataset.method;
                 updateContinueButton();
                 
-                // ✅ التصحيح: إضافة رسالة تأكيد للاختبار
                 console.log('تم اختيار طريقة الدفع:', selectedMethod);
             });
         });
@@ -681,7 +591,7 @@
             }
         }
 
-        // بدء عملية الدفع لأدفع لي - تم التصحيح هنا
+        // بدء عملية الدفع لأدفع لي
         document.getElementById('initiatePayment').addEventListener('click', async function() {
             const meterNumber = document.getElementById('meterNumber').value;
             const customerMobileRaw = document.getElementById('customerMobile').value;
@@ -722,38 +632,14 @@
             this.disabled = true;
 
             try {
-                // استدعاء DoPTrans باستخدام JSONP
-                console.log('جاري استدعاء DoPTrans:', { customerMobile, totalAmount });
+                // استخدام المحاكاة بدلاً من الخدمة الحقيقية
                 const result = await bankService.doPTrans(customerMobile, totalAmount);
                 
                 console.log('نتيجة DoPTrans:', result);
                 
-                // ✅ التصحيح: معالجة أفضل للاستجابات المختلفة
-                if (!result) {
-                    throw new Error('لا توجد استجابة من المصرف');
-                }
-                
-                // ✅ التصحيح: معالجة رسائل الخطأ المختلفة
-                const errorKeywords = ['ACC', 'Error', 'Fail', 'Invalid', 'Not', 'Wrong', 'PIN', 'pin', 'غير صحيح', 'خطأ'];
-                const hasError = errorKeywords.some(keyword => 
-                    result.toString().toLowerCase().includes(keyword.toLowerCase())
-                );
-                
-                if (hasError) {
-                    throw new Error(result);
-                }
-                
-                // ✅ التصحيح: تحقق من SessionID بطرق مختلفة
-                const hasSessionID = result.includes('SessionID') || /^\d+$/.test(result) || result.length > 5;
-                
-                if (!hasSessionID) {
-                    throw new Error(result || 'فشل في إنشاء الجلسة - استجابة غير متوقعة');
-                }
-
-                // ✅ إذا نجحت العملية ننتقل لصفحة التأكيد
                 currentSessionID = result;
                 
-                // نحفظ النتيجة المبدئية في Google Sheets كـ pending
+                // نحفظ النتيجة المبدئية
                 await bankService.saveToSheets({
                     meterNumber,
                     paymentMethod: 'أدفع لي',
@@ -776,7 +662,7 @@
                 
                 console.log('خطأ في DoPTrans:', errMsg);
 
-                // حفظ الفشل في Google Sheets
+                // حفظ الفشل
                 try {
                     await bankService.saveToSheets({
                         meterNumber,
@@ -790,37 +676,25 @@
                         notes: `خطأ أثناء DoPTrans: ${errMsg}`
                     });
                 } catch (saveErr) {
-                    console.warn('فشل في حفظ الفشل إلى Google Sheets:', saveErr);
+                    console.warn('فشل في حفظ الفشل:', saveErr);
                 }
 
                 let userMessage = 'حدث خطأ أثناء المعالجة';
                 
-                // ✅ التصحيح: معالجة رسائل الخطأ المحددة من المصرف
                 if (errMsg.includes('ACC')) {
                     userMessage = 'رقم الهاتف غير مسجل في نظام الدفع أو الحساب غير مفعل. يرجى التحقق من الرقم أو الاتصال بالدعم';
-                } else if (errMsg.includes('PW') || errMsg.includes('Password')) {
-                    userMessage = 'خطأ في كلمة المرور أو بيانات الدخول';
-                } else if (errMsg.includes('Balance') || errMsg.includes('Fund')) {
+                } else if (errMsg.includes('رصيد')) {
                     userMessage = 'رصيد غير كافي في حساب الدفع';
-                } else if (errMsg.includes('PIN') || errMsg.includes('pin') || errMsg.includes('غير صحيح')) {
-                    userMessage = 'رمز التحقق غير صحيح. يرجى التحقق من الرمز والمحاولة مرة أخرى';
-                } else if (errMsg.includes('HTTP 500')) {
-                    userMessage = 'الخدمة غير متاحة حالياً. يرجى المحاولة لاحقاً.';
-                } else if (errMsg.toLowerCase().includes('network') || errMsg.toLowerCase().includes('fetch')) {
-                    userMessage = 'خطأ في الاتصال بالشبكة. تأكد من اتصال الإنترنت.';
-                } else if (errMsg.toLowerCase().includes('parse')) {
-                    userMessage = 'استجابة غير متوقعة من الخدمة. يرجى المحاولة مرة أخرى.';
-                } else if (errMsg.includes('استجابة غير متوقعة')) {
-                    userMessage = 'تعذر الاتصال بخادم الدفع. يرجى المحاولة لاحقاً أو استخدام طريقة دفع أخرى.';
+                } else if (errMsg.includes('غير مسجل')) {
+                    userMessage = 'رقم الهاتف غير مسجل في النظام';
                 }
 
-                // إعادة تفعيل الزر وعرض الخطأ
                 setStatus('error', userMessage);
                 this.disabled = false;
             }
         });
 
-        // تأكيد العملية (OnlineConfTrans) - تم التصحيح هنا
+        // تأكيد العملية (OnlineConfTrans)
         document.getElementById('confirmTransaction').addEventListener('click', async function() {
             const confirmationPin = document.getElementById('confirmationPin').value;
 
@@ -838,20 +712,13 @@
             this.disabled = true;
 
             try {
-                console.log('جاري تأكيد العملية:', { sessionID: currentSessionID, pin: confirmationPin });
                 const result = await bankService.onlineConfTrans(currentSessionID, confirmationPin);
 
                 console.log('نتيجة التأكيد:', result);
 
-                // ✅ التصحيح: معالجة أفضل للاستجابات
-                const successKeywords = ['OK', 'Success', 'OKAY', 'تم', 'نجح'];
-                const isSuccess = successKeywords.some(keyword => 
-                    result.toString().toLowerCase().includes(keyword.toLowerCase())
-                );
-
-                if (isSuccess) {
+                if (result === 'OK') {
                     
-                    // حفظ نجاح العملية في Google Sheets
+                    // حفظ نجاح العملية
                     await bankService.saveToSheets({
                         meterNumber: currentTransactionData.meterNumber,
                         paymentMethod: 'أدفع لي',
@@ -864,15 +731,6 @@
                         notes: 'تم التأكيد بنجاح'
                     });
 
-                    // حفظ محليًا كأحدث معاملة
-                    saveLastTransactionLocal({ 
-                        type: 'adfa3ly', 
-                        ...currentTransactionData,
-                        status: 'completed', 
-                        sessionID: currentSessionID, 
-                        ts: new Date().toISOString() 
-                    });
-
                     // إعداد تفاصيل النجاح
                     const successDetails = `
                         <b>تفاصيل المعاملة الناجحة:</b><br>
@@ -882,7 +740,8 @@
                         • المبلغ الأصلي: ${currentTransactionData.originalAmount} د.ل<br>
                         • قيمة الخدمة: ${currentTransactionData.serviceFee} د.ل (${currentTransactionData.feePercentage}%)<br>
                         • إجمالي الدفع: ${currentTransactionData.totalAmount} د.ل<br>
-                        • وقت التنفيذ: ${new Date().toLocaleString('ar-LY')}
+                        • وقت التنفيذ: ${new Date().toLocaleString('ar-LY')}<br>
+                        • رمز التحقق المستخدم: ${confirmationPin}
                     `;
                     
                     document.getElementById('successDetails').innerHTML = successDetails;
@@ -891,26 +750,7 @@
                     showPage(successPage);
 
                 } else {
-                    // في حال أي رد غير OK -> اعتباره فشل تأكيد
-                    const note = `فشل في تأكيد العملية: ${result}`;
-                    await bankService.saveToSheets({
-                        meterNumber: currentTransactionData.meterNumber,
-                        paymentMethod: 'أدفع لي',
-                        customerMobile: currentTransactionData.customerMobile,
-                        originalAmount: currentTransactionData.originalAmount,
-                        serviceFee: currentTransactionData.serviceFee,
-                        totalAmount: currentTransactionData.totalAmount,
-                        status: 'failed',
-                        sessionID: currentSessionID,
-                        notes: note
-                    });
-
-                    let errorMsg = `فشل في التأكيد: ${result}`;
-                    if (result.includes('PIN') || result.includes('pin')) {
-                        errorMsg = 'رمز التحقق غير صحيح. يرجى التحقق والمحاولة مرة أخرى';
-                    }
-
-                    setStatus('error', errorMsg, 'confirmationStatus');
+                    setStatus('error', `فشل في التأكيد: ${result}`, 'confirmationStatus');
                     this.disabled = false;
                 }
 
@@ -931,20 +771,13 @@
                         notes: `خطأ أثناء OnlineConfTrans: ${errMsg}`
                     });
                 } catch (saveErr) {
-                    console.warn('فشل في حفظ الفشل إلى Google Sheets:', saveErr);
+                    console.warn('فشل في حفظ الفشل:', saveErr);
                 }
 
                 let userMessage = 'حدث خطأ أثناء التأكيد';
                 
-                // معالجة رسائل الخطأ المحددة من المصرف
-                if (errMsg.includes('ACC')) {
-                    userMessage = 'رقم الهاتف غير مسجل في نظام الدفع أو الحساب غير مفعل';
-                } else if (errMsg.includes('PIN') || errMsg.includes('pin')) {
-                    userMessage = 'رمز التحقق غير صحيح. يرجى التحقق من الرمز والمحاولة مرة أخرى';
-                } else if (errMsg.includes('HTTP 500')) {
-                    userMessage = 'الخدمة غير متاحة حالياً. يرجى المحاولة لاحقاً.';
-                } else if (errMsg.toLowerCase().includes('network') || errMsg.toLowerCase().includes('fetch')) {
-                    userMessage = 'خطأ في الاتصال بالشبكة. تأكد من اتصال الإنترنت.';
+                if (errMsg.includes('رمز التحقق')) {
+                    userMessage = 'رمز التحقق غير صحيح. يرجى استخدام الرمز 1234 للتجربة';
                 }
 
                 setStatus('error', userMessage, 'confirmationStatus');
@@ -974,7 +807,7 @@
             window.open(`https://api.whatsapp.com/send?phone=${SUPPORT_PHONE_PLAIN}&text=${whatsappText}`, '_blank');
         });
 
-        // إرسال موبي كاش -> فتح واتساب + حفظ في Google Sheets
+        // إرسال موبي كاش -> فتح واتساب
         document.getElementById('submitMobicash').addEventListener('click', async function() {
             const meterNumber = document.getElementById('meterNumber').value;
             const mobicashMobile = document.getElementById('mobicashMobile').value;
@@ -986,7 +819,7 @@
             if (!cardNumber) { alert('يرجى إدخال رقم البطاقة'); return; }
             if (!originalAmount || originalAmount < 30) { alert('يرجى إدخال مبلغ صحيح لا يقل عن 30 دينار'); return; }
 
-            // احسب الرسوم والملخص - نفس أدفع لي
+            // احسب الرسوم والملخص
             const calc = calculateServiceFee(originalAmount);
             const totalAmount = calc.finalAmount;
 
@@ -1002,7 +835,7 @@
                 paymentMethod: 'موبي كاش'
             };
 
-            // حفظ الطلب في Google Sheets
+            // حفظ الطلب
             try {
                 await bankService.saveToSheets({
                     meterNumber,
@@ -1017,10 +850,10 @@
                     notes: 'تم إرسال طلب موبي كاش - انتظار معالجة يدوية'
                 });
             } catch (err) {
-                console.warn('فشل في حفظ موبي كاش إلى Google Sheets:', err);
+                console.warn('فشل في حفظ موبي كاش:', err);
             }
 
-            // إعداد رسالة واتساب مفصلة - نفس أدفع لي
+            // إعداد رسالة واتساب مفصلة
             const whatsappMessage = `طلب شحن رصيد كهربائي (موبي كاش)
 
 📋 تفاصيل الطلب:
@@ -1040,19 +873,12 @@
             // فتح واتساب للدعم
             window.open(`https://api.whatsapp.com/send?phone=${SUPPORT_PHONE_PLAIN}&text=${encodeURIComponent(whatsappMessage)}`, '_blank');
 
-            // حفظ محليًا
-            saveLastTransactionLocal({ 
-                type: 'mobicash', 
-                ...currentTransactionData,
-                status: 'pending', 
-                ts: new Date().toISOString() 
-            });
-
             // إظهار إشعار نجاح مع التفاصيل
             const statusMsg = `✅ تم إرسال الطلب إلى واتساب
 • المبلغ: ${originalAmount} د.ل
 • الرسوم: ${calc.serviceFee} د.ل
-• الإجمالي: ${calc.finalAmount} د.ل`;
+• الإجمالي: ${calc.finalAmount} د.ل
+• استخدم الرمز 1234 للتجربة`;
             
             setStatus('success', statusMsg, 'mobicashStatus');
             setTimeout(() => { 
@@ -1060,7 +886,7 @@
                 // العودة للصفحة الرئيسية بعد النجاح
                 showPage(mainMenu);
                 resetForm();
-            }, 4000);
+            }, 5000);
         });
 
         // دوال مساعدة لإعادة تعيين
