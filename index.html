@@ -274,51 +274,26 @@
     // ======================
     class BankPaymentService {
         constructor() {
-            // تأكد من أن الرابط صحيح ويبدأ بـ https://script.google.com/macros/s/
+            // رابط Google Apps Script الحقيقي
             this.scriptURL = 'https://script.google.com/macros/s/AKfycbxIlj4umGnPxIMdsci8G4XnOmF8wxJjAtsGnc-2IISW8QOHQI9WmY-H2uLpFRD-qnI-/exec';
         }
 
-        // دالة مساعدة للاتصال مع Google Apps Script
+        // دالة الاتصال الرئيسية مع JSONP
         async callGoogleScript(action, data = {}) {
-            try {
-                const url = new URL(this.scriptURL);
-                url.searchParams.append('action', action);
-                
-                // إضافة جميع معاملات البيانات إلى URL
-                Object.keys(data).forEach(key => {
-                    url.searchParams.append(key, data[key]);
-                });
-
-                console.log(`جاري الاتصال بـ ${url.toString()}`);
-
-                const response = await fetch(url.toString(), {
-                    method: 'GET',
-                    mode: 'no-cors' // مهم لتفادي مشاكل CORS
-                });
-
-                // مع no-cors لا يمكننا قراءة ال response مباشرة
-                // لذلك نعتبر أن الطلب تم بنجاح إذا لم يكن هناك خطأ في الشبكة
-                console.log('تم إرسال الطلب بنجاح إلى Google Apps Script');
-                return { success: true, message: 'تم إرسال الطلب' };
-
-            } catch (error) {
-                console.error('خطأ في الاتصال:', error);
-                throw new Error('فشل في الاتصال بالخادم: ' + error.message);
-            }
-        }
-
-        // طريقة بديلة باستخدام JSONP
-        callGoogleScriptJSONP(action, data = {}) {
             return new Promise((resolve, reject) => {
                 const callbackName = 'jsonp_callback_' + Math.round(999999 * Math.random());
                 const script = document.createElement('script');
                 
                 let url = `${this.scriptURL}?callback=${callbackName}&action=${action}`;
                 
-                // إضافة البيانات
+                // إضافة جميع معاملات البيانات إلى URL
                 Object.keys(data).forEach(key => {
-                    url += `&${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`;
+                    if (data[key] !== undefined && data[key] !== null) {
+                        url += `&${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`;
+                    }
                 });
+
+                console.log(`📤 إرسال طلب ${action} إلى:`, url);
 
                 script.src = url;
                 
@@ -327,16 +302,16 @@
                     document.body.removeChild(script);
                     
                     if (response && response.success) {
-                        resolve(response.data);
+                        resolve(response);
                     } else {
-                        reject(new Error(response?.error || 'خطأ في الاستجابة'));
+                        reject(new Error(response?.error || 'خطأ في الاستجابة من الخادم'));
                     }
                 };
 
                 script.onerror = () => {
                     delete window[callbackName];
                     document.body.removeChild(script);
-                    reject(new Error('فشل في تحميل السكريبت'));
+                    reject(new Error('فشل في تحميل السكريبت - تأكد من اتصال الإنترنت'));
                 };
 
                 document.body.appendChild(script);
@@ -346,78 +321,58 @@
                     if (window[callbackName]) {
                         delete window[callbackName];
                         document.body.removeChild(script);
-                        reject(new Error('انتهت مهلة الاتصال'));
+                        reject(new Error('انتهت مهلة الاتصال بالخادم'));
                     }
                 }, 30000);
             });
         }
 
         async doPTrans(customerMobile, amount) {
-            console.log('استدعاء doPTrans:', { customerMobile, amount });
+            console.log('🚀 بدء DoPTrans:', { customerMobile, amount });
             
             try {
-                // المحاولة الأولى: استخدام JSONP
-                const result = await this.callGoogleScriptJSONP('doPTrans', {
+                const result = await this.callGoogleScript('doPTrans', {
                     customerMobile: customerMobile,
                     amount: amount
                 });
                 
-                console.log('نتيجة doPTrans:', result);
-                return result;
+                console.log('✅ نتيجة DoPTrans:', result);
+                return result.data;
                 
             } catch (error) {
-                console.log('فشل JSONP، جاري المحاولة بـ no-cors:', error);
-                
-                // المحاولة الثانية: استخدام no-cors
-                await this.callGoogleScript('doPTrans', {
-                    customerMobile: customerMobile,
-                    amount: amount
-                });
-                
-                // في حالة no-cors نعود بقيمة محاكاة لأننا لا نستطيع قراءة ال response
-                const mockSessionID = 'SESS_' + Date.now() + '_GAS';
-                console.log('استخدام قيمة محاكاة بسبب no-cors:', mockSessionID);
-                return mockSessionID;
+                console.error('❌ خطأ في DoPTrans:', error);
+                throw error;
             }
         }
 
         async onlineConfTrans(sessionID, confirmationPin) {
-            console.log('استدعاء onlineConfTrans:', { sessionID, confirmationPin });
+            console.log('🔐 بدء OnlineConfTrans:', { sessionID, confirmationPin });
             
             try {
-                const result = await this.callGoogleScriptJSONP('onlineConfTrans', {
+                const result = await this.callGoogleScript('onlineConfTrans', {
                     sessionID: sessionID,
                     confirmationPin: confirmationPin
                 });
                 
-                console.log('نتيجة onlineConfTrans:', result);
-                return result;
+                console.log('✅ نتيجة OnlineConfTrans:', result);
+                return result.data;
                 
             } catch (error) {
-                console.log('فشل JSONP، جاري المحاولة بـ no-cors:', error);
-                
-                await this.callGoogleScript('onlineConfTrans', {
-                    sessionID: sessionID,
-                    confirmationPin: confirmationPin
-                });
-                
-                // محاكاة النجاح ل no-cors
-                console.log('استخدام قيمة محاكاة بسبب no-cors: OK');
-                return 'OK';
+                console.error('❌ خطأ في OnlineConfTrans:', error);
+                throw error;
             }
         }
 
         async saveToSheets(data) {
-            console.log('حفظ في Sheets:', data);
+            console.log('💾 حفظ في Sheets:', data);
             
             try {
-                await this.callGoogleScriptJSONP('saveToSheets', data);
-                return { success: true, message: 'تم الحفظ' };
+                const result = await this.callGoogleScript('saveToSheets', data);
+                console.log('✅ تم الحفظ:', result);
+                return result;
             } catch (error) {
-                console.log('فشل حفظ في Sheets، جاري المحاولة بـ no-cors:', error);
-                
-                await this.callGoogleScript('saveToSheets', data);
-                return { success: true, message: 'تم الحفظ (no-cors)' };
+                console.error('❌ خطأ في الحفظ:', error);
+                throw error;
             }
         }
     }
@@ -483,6 +438,8 @@
         function formatLibyanPhone(phoneRaw) {
             if (!phoneRaw) return '';
             let num = phoneRaw.replace(/\D/g,'');
+            
+            // تحويل إلى صيغة +2189xxxxxxxx
             if (num.startsWith('0') && !num.startsWith('218')) {
                 num = num.replace(/^0+/, '');
             }
@@ -494,7 +451,7 @@
             }
             if (num.startsWith('+')) return num;
             if (num.length === 10 && num.startsWith('09')) {
-                return '+218' + num.slice(1);
+                return '+218' + num.substring(1);
             }
             return (num.length > 0 && !num.startsWith('+')) ? ('+' + num) : num;
         }
@@ -724,12 +681,26 @@
             this.disabled = true;
 
             try {
+                // حفظ البيانات أولاً
+                await bankService.saveToSheets({
+                    meterNumber,
+                    paymentMethod: 'أدفع لي',
+                    customerMobile,
+                    originalAmount: originalAmount,
+                    serviceFee: calc.serviceFee,
+                    totalAmount: totalAmount,
+                    status: 'initiated',
+                    notes: 'بدء عملية الدفع'
+                });
+
+                // استدعاء DoPTrans
                 const result = await bankService.doPTrans(customerMobile, totalAmount);
                 
-                console.log('نتيجة DoPTrans:', result);
+                console.log('✅ نتيجة DoPTrans:', result);
                 
                 currentSessionID = result;
                 
+                // حفظ النتيجة
                 await bankService.saveToSheets({
                     meterNumber,
                     paymentMethod: 'أدفع لي',
@@ -749,8 +720,9 @@
             } catch (error) {
                 const errMsg = (error && error.message) ? error.message : 'خطأ غير معروف';
                 
-                console.log('خطأ في DoPTrans:', errMsg);
+                console.error('❌ خطأ في DoPTrans:', errMsg);
 
+                // حفظ الفشل
                 try {
                     await bankService.saveToSheets({
                         meterNumber,
@@ -764,7 +736,7 @@
                         notes: `خطأ أثناء DoPTrans: ${errMsg}`
                     });
                 } catch (saveErr) {
-                    console.warn('فشل في حفظ الفشل:', saveErr);
+                    console.warn('❌ فشل في حفظ الفشل:', saveErr);
                 }
 
                 let userMessage = 'حدث خطأ أثناء المعالجة';
@@ -775,6 +747,8 @@
                     userMessage = 'رصيد غير كافي في حساب الدفع';
                 } else if (errMsg.includes('فشل في الاتصال')) {
                     userMessage = 'تعذر الاتصال بخادم الدفع. يرجى المحاولة لاحقاً';
+                } else if (errMsg.includes('PW') || errMsg.includes('Pin')) {
+                    userMessage = 'بيانات الدخول غير صحيحة';
                 }
 
                 setStatus('error', userMessage);
@@ -802,7 +776,7 @@
             try {
                 const result = await bankService.onlineConfTrans(currentSessionID, confirmationPin);
 
-                console.log('نتيجة التأكيد:', result);
+                console.log('✅ نتيجة التأكيد:', result);
 
                 if (result === 'OK' || result === 'Success') {
                     
@@ -840,7 +814,7 @@
 
             } catch (error) {
                 const errMsg = (error && error.message) ? error.message : 'خطأ غير معروف أثناء التأكيد';
-                console.log('خطأ في التأكيد:', errMsg);
+                console.error('❌ خطأ في التأكيد:', errMsg);
                 
                 try {
                     await bankService.saveToSheets({
@@ -855,7 +829,7 @@
                         notes: `خطأ أثناء OnlineConfTrans: ${errMsg}`
                     });
                 } catch (saveErr) {
-                    console.warn('فشل في حفظ الفشل:', saveErr);
+                    console.warn('❌ فشل في حفظ الفشل:', saveErr);
                 }
 
                 let userMessage = 'حدث خطأ أثناء التأكيد';
@@ -864,6 +838,8 @@
                     userMessage = 'رمز التحقق غير صحيح';
                 } else if (errMsg.includes('فشل في الاتصال')) {
                     userMessage = 'تعذر الاتصال بخادم الدفع';
+                } else if (errMsg.includes('Invalid') || errMsg.includes('Fail')) {
+                    userMessage = 'رمز التحقق غير صحيح أو انتهت صلاحية الجلسة';
                 }
 
                 setStatus('error', userMessage, 'confirmationStatus');
@@ -933,7 +909,7 @@
                     notes: 'تم إرسال طلب موبي كاش - انتظار معالجة يدوية'
                 });
             } catch (err) {
-                console.warn('فشل في حفظ موبي كاش:', err);
+                console.warn('❌ فشل في حفظ موبي كاش:', err);
             }
 
             const whatsappMessage = `طلب شحن رصيد كهربائي (موبي كاش)
