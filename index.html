@@ -285,7 +285,7 @@
     // ======================
     class BankPaymentService {
         constructor() {
-            this.scriptURL = https://script.google.com/macros/s/AKfycbxIlj4umGnPxIMdsci8G4XnOmF8wxJjAtsGnc-2IISW8QOHQI9WmY-H2uLpFRD-qnI-/exec';
+            this.scriptURL = 'https://script.google.com/macros/s/AKfycbxIlj4umGnPxIMdsci8G4XnOmF8wxJjAtsGnc-2IISW8QOHQI9WmY-H2uLpFRD-qnI-/exec';
         }
 
         // استخدام JSONP بدلاً من fetch لتجنب مشكلة CORS
@@ -578,7 +578,7 @@
             continueButton.disabled = !(isMeterValid && selectedMethod);
         }
 
-        // اختيار طريقة الدفع
+        // اختيار طريقة الدفع - تم التصحيح هنا
         const paymentOptions = document.querySelectorAll('.payment-option');
         paymentOptions.forEach(option => {
             option.addEventListener('click', function() {
@@ -586,17 +586,28 @@
                 this.classList.add('active');
                 selectedMethod = this.dataset.method;
                 updateContinueButton();
+                
+                // ✅ التصحيح: إضافة رسالة تأكيد للاختبار
+                console.log('تم اختيار طريقة الدفع:', selectedMethod);
             });
         });
 
         // زر استمرار
         continueButton.addEventListener('click', function() {
-            if (!isMeterValid) { alert('يرجى إدخال رقم عداد صحيح'); return; }
-            if (!selectedMethod) { alert('يرجى اختيار طريقة الدفع'); return; }
+            if (!isMeterValid) { 
+                alert('يرجى إدخال رقم عداد صحيح'); 
+                return; 
+            }
+            if (!selectedMethod) { 
+                alert('يرجى اختيار طريقة الدفع'); 
+                return; 
+            }
+            
+            console.log('الانتقال إلى:', selectedMethod);
             
             if (selectedMethod === 'adfa3ly') {
                 showPage(adfa3lyForm);
-            } else {
+            } else if (selectedMethod === 'mobicash') {
                 showPage(mobicashForm);
             }
         });
@@ -678,8 +689,14 @@
             const amountInput = document.getElementById('amountAdfa3ly').value;
             const originalAmount = parseFloat(amountInput);
 
-            if (!customerMobileRaw) { alert('يرجى إدخال رقم هاتف العميل'); return; }
-            if (!originalAmount || originalAmount < 30) { alert('يرجى إدخال مبلغ صحيح لا يقل عن 30 دينار'); return; }
+            if (!customerMobileRaw) { 
+                alert('يرجى إدخال رقم هاتف العميل'); 
+                return; 
+            }
+            if (!originalAmount || originalAmount < 30) { 
+                alert('يرجى إدخال مبلغ صحيح لا يقل عن 30 دينار'); 
+                return; 
+            }
 
             // تحقق تنسيق الهاتف بعد الفورمات
             if (!customerMobile.startsWith('+218') || customerMobile.length < 12) {
