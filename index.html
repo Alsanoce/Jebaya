@@ -301,10 +301,11 @@
                     delete window[callbackName];
                     document.body.removeChild(script);
                     
+                    // ✅ التصحيح: تحقق من response.success بدلاً من response فقط
                     if (response && response.success) {
                         resolve(response);
                     } else {
-                        reject(new Error(response?.error || 'خطأ في الاستجابة من الخادم'));
+                        reject(new Error(response?.message || response?.error || 'خطأ في الاستجابة من الخادم'));
                     }
                 };
 
@@ -337,7 +338,7 @@
                 });
                 
                 console.log('✅ نتيجة DoPTrans:', result);
-                return result.data;
+                return result; // ✅ التصحيح: إرجاع الكامل وليس result.data
                 
             } catch (error) {
                 console.error('❌ خطأ في DoPTrans:', error);
@@ -355,7 +356,7 @@
                 });
                 
                 console.log('✅ نتيجة OnlineConfTrans:', result);
-                return result.data;
+                return result; // ✅ التصحيح: إرجاع الكامل
                 
             } catch (error) {
                 console.error('❌ خطأ في OnlineConfTrans:', error);
@@ -698,24 +699,29 @@
                 
                 console.log('✅ نتيجة DoPTrans:', result);
                 
-                currentSessionID = result;
-                
-                // حفظ النتيجة
-                await bankService.saveToSheets({
-                    meterNumber,
-                    paymentMethod: 'أدفع لي',
-                    customerMobile,
-                    originalAmount: originalAmount,
-                    serviceFee: calc.serviceFee,
-                    totalAmount: totalAmount,
-                    status: 'pending',
-                    sessionID: result,
-                    notes: 'تم إنشاء الجلسة - في انتظار التأكيد'
-                });
+                // ✅ التصحيح: استخراج sessionID من result
+                if (result.success && result.sessionID) {
+                    currentSessionID = result.sessionID;
+                    
+                    // حفظ النتيجة
+                    await bankService.saveToSheets({
+                        meterNumber,
+                        paymentMethod: 'أدفع لي',
+                        customerMobile,
+                        originalAmount: originalAmount,
+                        serviceFee: calc.serviceFee,
+                        totalAmount: totalAmount,
+                        status: 'pending',
+                        sessionID: result.sessionID,
+                        notes: 'تم إنشاء الجلسة - في انتظار التأكيد'
+                    });
 
-                showPage(confirmationPage);
-                clearStatus();
-                this.disabled = false;
+                    showPage(confirmationPage);
+                    clearStatus();
+                    this.disabled = false;
+                } else {
+                    throw new Error(result.message || 'فشل في إنشاء جلسة الدفع');
+                }
 
             } catch (error) {
                 const errMsg = (error && error.message) ? error.message : 'خطأ غير معروف';
@@ -778,7 +784,8 @@
 
                 console.log('✅ نتيجة التأكيد:', result);
 
-                if (result === 'OK' || result === 'Success') {
+                // ✅ التصحيح: تحقق من result.success بدلاً من result مباشرة
+                if (result.success) {
                     
                     await bankService.saveToSheets({
                         meterNumber: currentTransactionData.meterNumber,
@@ -808,7 +815,7 @@
                     showPage(successPage);
 
                 } else {
-                    setStatus('error', `فشل في التأكيد: ${result}`, 'confirmationStatus');
+                    setStatus('error', `فشل في التأكيد: ${result.message}`, 'confirmationStatus');
                     this.disabled = false;
                 }
 
